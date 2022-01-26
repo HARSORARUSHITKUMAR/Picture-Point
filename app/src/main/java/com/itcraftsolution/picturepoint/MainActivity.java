@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+//        itcraftsolution
         setSupportActionBar(binding.tlMain);
         list = new ArrayList<>();
         adapter = new PopularHomeRecyclerAdapter(MainActivity.this  , list);
