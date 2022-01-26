@@ -4,12 +4,12 @@ public class ImageModel {
 
     private UrlModel urls;
     private UserModel user;
-    private DownloadModel download;
+    private DownloadModel links;
 
-    public ImageModel(UrlModel urls, UserModel user, DownloadModel download) {
+    public ImageModel(UrlModel urls, UserModel user, DownloadModel links) {
         this.urls = urls;
         this.user = user;
-        this.download = download;
+        this.links = links;
     }
 
     public UrlModel getUrls() {
@@ -28,11 +28,11 @@ public class ImageModel {
         this.user = user;
     }
 
-    public DownloadModel getDownload() {
-        return download;
+    public DownloadModel getLinks() {
+        return links;
     }
 
-    public void setDownload(DownloadModel download) {
-        this.download = download;
+    public void setLinks(DownloadModel links) {
+        this.links = links;
     }
 }

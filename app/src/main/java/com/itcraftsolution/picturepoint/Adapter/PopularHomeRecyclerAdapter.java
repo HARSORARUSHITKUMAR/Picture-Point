@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.itcraftsolution.picturepoint.ImageDetailsActivity;
 import com.itcraftsolution.picturepoint.Models.ImageModel;
 import com.itcraftsolution.picturepoint.R;
@@ -40,6 +41,8 @@ public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHome
         ImageModel imageModel = list.get(position);
         Glide.with(context)
                 .load(imageModel.getUrls().getRegular())
+                .error(R.drawable.error)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.igSampleImage);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -47,8 +50,10 @@ public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHome
             public void onClick(View v) {
                 Intent intent = new Intent(context , ImageDetailsActivity.class);
                 intent.putExtra("FullImage" , imageModel.getUrls().getRegular());
+                intent.putExtra("UserName" , imageModel.getUser().getUsername());
+                intent.putExtra("UserProfile" , imageModel.getUser().getProfile_image().getMedium());
+                intent.putExtra("DownloadImage" , imageModel.getLinks().getDownload());
                 context.startActivity(intent);
-
             }
         });
     }
