@@ -105,7 +105,6 @@ public class ImageDetailsActivity extends AppCompatActivity {
                 .error(R.drawable.error)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.igDetailsProfile);
-
         binding.txDetailsName.setText(getIntent().getStringExtra("UserName"));
 
     }

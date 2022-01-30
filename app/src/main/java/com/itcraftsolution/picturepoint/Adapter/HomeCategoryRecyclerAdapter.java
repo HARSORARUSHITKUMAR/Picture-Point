@@ -11,20 +11,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.itcraftsolution.picturepoint.CatImageActivity;
 import com.itcraftsolution.picturepoint.ImageDetailsActivity;
 import com.itcraftsolution.picturepoint.Models.CategoryModel;
 import com.itcraftsolution.picturepoint.Models.ImageModel;
 import com.itcraftsolution.picturepoint.R;
-import com.itcraftsolution.picturepoint.databinding.RvhomepopularSampleBinding;
+import com.itcraftsolution.picturepoint.databinding.CategorySampleBinding;
 
 import java.util.ArrayList;
 
-public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHomeRecyclerAdapter.viewHolder> {
+public class HomeCategoryRecyclerAdapter extends RecyclerView.Adapter<HomeCategoryRecyclerAdapter.viewHolder> {
 
     Context context;
-    ArrayList<ImageModel> list;
+    ArrayList<CategoryModel> list;
 
-    public PopularHomeRecyclerAdapter(Context context, ArrayList<ImageModel> list) {
+    public HomeCategoryRecyclerAdapter(Context context, ArrayList<CategoryModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -32,31 +33,27 @@ public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHome
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.rvhomepopular_sample , parent , false);
+        View view= LayoutInflater.from(context).inflate(R.layout.category_sample, parent, false);
+
         return new viewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
 
-        ImageModel imageModel = list.get(position);
-        Glide.with(context)
-                .load(imageModel.getUrls().getRegular())
-                .error(R.drawable.error)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(holder.binding.igSampleImage);
+        CategoryModel model = list.get(position);
+        holder.binding.igSampleImage.setImageResource(model.getImage());
+        holder.binding.txSampleName.setText(model.getCategoryName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context , ImageDetailsActivity.class);
-                intent.putExtra("FullImage" , imageModel.getUrls().getRegular());
-                intent.putExtra("UserName" , imageModel.getUser().getUsername());
-                intent.putExtra("UserProfile" , imageModel.getUser().getProfile_image().getMedium());
-                intent.putExtra("DownloadImage" , imageModel.getLinks().getDownload());
+                Intent intent = new Intent(context, CatImageActivity.class);
+                intent.putExtra("CategoryName", model.getCategoryName());
                 context.startActivity(intent);
             }
         });
+
     }
 
     @Override
@@ -65,10 +62,10 @@ public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHome
     }
 
     public static class viewHolder extends RecyclerView.ViewHolder {
-        RvhomepopularSampleBinding binding;
+        CategorySampleBinding binding;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
-            binding = RvhomepopularSampleBinding.bind(itemView);
+            binding = CategorySampleBinding.bind(itemView);
         }
     }
 }
