@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.transition.Fade;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -43,6 +44,15 @@ public class ImageDetailsActivity extends AppCompatActivity {
         binding = ActivityImageDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Fade fade = new Fade();
+        View decor = getWindow().getDecorView();
+
+        fade.excludeTarget(decor.findViewById(R.id.action_bar_container), true);
+        fade.excludeTarget(android.R.id.statusBarBackground, true);
+        fade.excludeTarget(android.R.id.navigationBarBackground, true);
+
+        getWindow().setEnterTransition(fade);
+        getWindow().setExitTransition(fade);
         // Load Data First
         LoadData();
 

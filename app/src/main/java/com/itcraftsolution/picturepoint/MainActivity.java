@@ -12,7 +12,9 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.FaceDetector;
 import android.os.Bundle;
+import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -75,6 +77,15 @@ public class MainActivity extends AppCompatActivity {
         binding.rvImage.setHasFixedSize(true);
         binding.rvImage.setAdapter(adapter);
 
+        Fade fade = new Fade();
+        View decor = getWindow().getDecorView();
+
+        fade.excludeTarget(decor.findViewById(R.id.action_bar_container), true);
+        fade.excludeTarget(android.R.id.statusBarBackground, true);
+        fade.excludeTarget(android.R.id.navigationBarBackground, true);
+
+        getWindow().setEnterTransition(fade);
+        getWindow().setExitTransition(fade);
         getData();
 
         categoryModels.add(new CategoryModel(R.drawable.trending, "Trending"));

@@ -1,5 +1,6 @@
 package com.itcraftsolution.picturepoint.Adapter;
 
+ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -7,17 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.itcraftsolution.picturepoint.ImageDetailsActivity;
-import com.itcraftsolution.picturepoint.Models.CategoryModel;
 import com.itcraftsolution.picturepoint.Models.ImageModel;
 import com.itcraftsolution.picturepoint.R;
 import com.itcraftsolution.picturepoint.databinding.RvhomepopularSampleBinding;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHomeRecyclerAdapter.viewHolder> {
 
@@ -50,11 +53,13 @@ public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHome
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context , ImageDetailsActivity.class);
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context,holder.binding.igSampleImage,
+                        Objects.requireNonNull(ViewCompat.getTransitionName(holder.binding.igSampleImage)));
                 intent.putExtra("FullImage" , imageModel.getUrls().getRegular());
                 intent.putExtra("UserName" , imageModel.getUser().getUsername());
                 intent.putExtra("UserProfile" , imageModel.getUser().getProfile_image().getMedium());
                 intent.putExtra("DownloadImage" , imageModel.getLinks().getDownload());
-                context.startActivity(intent);
+                context.startActivity(intent, optionsCompat.toBundle());
             }
         });
     }
