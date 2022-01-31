@@ -1,29 +1,23 @@
 package com.itcraftsolution.picturepoint;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.media.FaceDetector;
 import android.os.Bundle;
 import android.transition.Fade;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.itcraftsolution.picturepoint.Adapter.HomeCategoryRecyclerAdapter;
 import com.itcraftsolution.picturepoint.Adapter.PopularHomeRecyclerAdapter;
-import com.itcraftsolution.picturepoint.Api.ApiInterface;
 import com.itcraftsolution.picturepoint.Api.ApiUtilities;
 import com.itcraftsolution.picturepoint.Models.CategoryModel;
 import com.itcraftsolution.picturepoint.Models.ImageModel;
@@ -32,7 +26,6 @@ import com.itcraftsolution.picturepoint.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +34,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private ArrayList<ImageModel> backuplist;
     private ArrayList<CategoryModel> categoryModels;
     private ArrayList<ImageModel> list;
     private GridLayoutManager manager;
@@ -52,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private int page = 7;
     private int pagesize = 30;
     private String Keyword = null;
-    private boolean isLoading, isLastPage,isjustLoading,isjustLastPage;
+    private boolean isLoading, isLastPage;
     private boolean FromSearch = false;
     private boolean FromScroll = false;
 
@@ -64,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.tlMain);
         list = new ArrayList<>();
-        backuplist = new ArrayList<>();
         categoryModels = new ArrayList<>();
         adapter = new PopularHomeRecyclerAdapter(MainActivity.this  , list);
         manager = new GridLayoutManager(MainActivity.this , 2);
@@ -173,9 +164,6 @@ public class MainActivity extends AppCompatActivity {
 
            @Override
            public boolean onQueryTextChange(String newText) {
-//               dialog.show();
-//               searchData(newText);
-
                    dialog.show();
                    searchData(newText);
 //                   SearchView.clearFocus();
@@ -188,20 +176,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void searchData(String query) {
-//        binding.textView2.setVisibility(View.GONE);
-//        binding.rvcategory.setVisibility(View.GONE);
-//        binding.textView3.setText("Top Searches");
-
-        Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
+        binding.textView2.setVisibility(View.GONE);
+        binding.rvcategory.setVisibility(View.GONE);
+        binding.textView3.setText("Top Searches");
             dialog.dismiss();
         if (!FromScroll) {
             list.clear();
         }
             if(query.isEmpty())
             {
-//                binding.textView2.setVisibility(View.VISIBLE);
-//                binding.rvcategory.setVisibility(View.VISIBLE);
-//                binding.textView3.setText("Popular Searches");
+                binding.textView2.setVisibility(View.VISIBLE);
+                binding.rvcategory.setVisibility(View.VISIBLE);
+                binding.textView3.setText("Popular Searches");
                 FromSearch = true;
                getData();
             }
@@ -229,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void getData()
     {
-        Toast.makeText(this, "new data", Toast.LENGTH_SHORT).show();
         isLoading = true;
         ApiUtilities.apiInterface().getImages(page , 30).enqueue(new Callback<List<ImageModel>>() {
             @SuppressLint("NotifyDataSetChanged")
