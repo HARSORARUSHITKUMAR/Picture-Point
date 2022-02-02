@@ -33,11 +33,11 @@ public class CatImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityCatImageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        //call SearchData
         searchData(getIntent().getStringExtra("CategoryName"));
         list = new ArrayList<>();
-        adapter = new PopularHomeRecyclerAdapter(this  , list);
-        manager = new GridLayoutManager(this , 2);
+        adapter = new PopularHomeRecyclerAdapter(this, list);
+        manager = new GridLayoutManager(this, 2);
         binding.rvCatImage.setLayoutManager(manager);
         binding.rvCatImage.setHasFixedSize(true);
         binding.rvCatImage.setAdapter(adapter);
@@ -48,18 +48,17 @@ public class CatImageActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<SearchModel> call, Response<SearchModel> response) {
-                if(response.body() != null)
-                {
+                if (response.body() != null) {
                     list.addAll(response.body().getResults());
                     adapter.notifyDataSetChanged();
-                }
-                else {
-                    Toast.makeText(CatImageActivity.this, ""+response.message(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CatImageActivity.this, "" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<SearchModel> call, Throwable t) {
-                Toast.makeText(CatImageActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CatImageActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

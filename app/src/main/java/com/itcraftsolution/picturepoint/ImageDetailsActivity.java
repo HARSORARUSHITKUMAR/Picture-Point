@@ -31,7 +31,7 @@ import java.net.URL;
 public class ImageDetailsActivity extends AppCompatActivity {
 
     private ActivityImageDetailsBinding binding;
-    private Animation fabOpen, fabClose , rotateForward, rotatebackward;
+    private Animation fabOpen, fabClose, rotateForward, rotatebackward;
     private boolean isOpen = false;
     private int DURATION = 300;
     private ProgressDialog dialog;
@@ -85,8 +85,8 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT , "I'm using #PicturePoint, Share and Download Image there is much easier: "
-                        +getIntent().getStringExtra("DownloadImage")+" #PicturePoint #Wallpaper");
+                intent.putExtra(Intent.EXTRA_TEXT, "I'm using #PicturePoint, Share and Download Image there is much easier: "
+                        + getIntent().getStringExtra("DownloadImage") + " #PicturePoint #Wallpaper");
                 intent.setType("text/plain");
                 startActivity(Intent.createChooser(intent, null));
             }
@@ -102,8 +102,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void LoadData()
-    {
+    private void LoadData() {
         Glide.with(ImageDetailsActivity.this)
                 .load(getIntent().getStringExtra("FullImage"))
                 .error(R.drawable.error)
@@ -118,8 +117,8 @@ public class ImageDetailsActivity extends AppCompatActivity {
         binding.txDetailsName.setText(getIntent().getStringExtra("UserName"));
 
     }
-    private void DownloadImage(String FileName , String ImageUri)
-    {
+
+    private void DownloadImage(String FileName, String ImageUri) {
         try {
             manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
             uri = Uri.parse(ImageUri);
@@ -129,28 +128,25 @@ public class ImageDetailsActivity extends AppCompatActivity {
                     .setAllowedOverRoaming(false)
                     .setTitle(FileName)
                     .setAllowedNetworkTypes(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, File.separator+FileName+".jpg");
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, File.separator + FileName + ".jpg");
             manager.enqueue(request);
 
             Toast.makeText(ImageDetailsActivity.this, "Save To Gallery", Toast.LENGTH_SHORT).show();
-        }catch (Exception e)
-        {
-            Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
     }
-    private void animateFab()
-    {
-        if(isOpen)
-        {
+
+    private void animateFab() {
+        if (isOpen) {
             binding.fabMainDetails.startAnimation(rotateForward);
             binding.fabDetailsShare.startAnimation(fabClose);
             binding.fabDetailsDownload.startAnimation(fabClose);
             binding.fabDetailsShare.setClickable(false);
             binding.fabDetailsDownload.setClickable(false);
             isOpen = false;
-        }
-        else {
+        } else {
             binding.fabMainDetails.startAnimation(rotatebackward);
             binding.fabDetailsShare.startAnimation(fabOpen);
             binding.fabDetailsDownload.startAnimation(fabOpen);

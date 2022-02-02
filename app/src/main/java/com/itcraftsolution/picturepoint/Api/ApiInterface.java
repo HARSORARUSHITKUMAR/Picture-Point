@@ -13,20 +13,20 @@ import com.itcraftsolution.picturepoint.Models.SearchModel;
 import java.util.List;
 
 public interface ApiInterface {
-        //Image Get
-    @Headers("Authorization: Client-ID "+APi_KEY)
+    //Image Get
+    @Headers("Authorization: Client-ID " + APi_KEY)
     @GET("/photos")
     Call<List<ImageModel>> getImages(
             @Query("page") int page,
             @Query("per_page") int perPage
     );
 
-            //Search Images
-    @Headers("Authorization: Client-ID "+APi_KEY)
+    //Search Images
+    @Headers("Authorization: Client-ID " + APi_KEY)
     @GET("/search/photos")
     Call<SearchModel> SearchImages(
             @Query("query") String query,
             @Query("page") int searchpage,
-             @Query("per_page") int searchperPage
+            @Query("per_page") int searchperPage
     );
 }

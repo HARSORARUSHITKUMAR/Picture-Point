@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="180dp"
     android:layout_height="100dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="10dp"
-    app:cardCornerRadius="6dp"
+    android:layout_marginHorizontal="4dp"
     android:layout_marginTop="8dp"
-    android:layout_marginHorizontal="4dp">
+    app:cardCornerRadius="6dp"
+    app:cardElevation="10dp">
 
     <ImageView
         android:id="@+id/igSampleImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/app_name"
-        android:scaleType="centerCrop"
-        />
+        android:scaleType="centerCrop" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/liteblack"
-        />
+        android:background="@color/liteblack" />
+
     <TextView
         android:id="@+id/txSampleName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="serif"
         android:text="Category Name"
         android:textColor="@color/white"
-        android:fontFamily="serif"
-        android:textStyle="bold"
-        android:layout_gravity="center"
         android:textSize="18sp"
-        />
+        android:textStyle="bold" />
 </androidx.cardview.widget.CardView>

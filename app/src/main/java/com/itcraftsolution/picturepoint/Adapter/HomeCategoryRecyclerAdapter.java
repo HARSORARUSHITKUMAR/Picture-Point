@@ -33,8 +33,7 @@ public class HomeCategoryRecyclerAdapter extends RecyclerView.Adapter<HomeCatego
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.category_sample, parent, false);
-
+        View view = LayoutInflater.from(context).inflate(R.layout.category_sample, parent, false);
         return new viewHolder(view);
     }
 
@@ -63,6 +62,7 @@ public class HomeCategoryRecyclerAdapter extends RecyclerView.Adapter<HomeCatego
 
     public static class viewHolder extends RecyclerView.ViewHolder {
         CategorySampleBinding binding;
+
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             binding = CategorySampleBinding.bind(itemView);

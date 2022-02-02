@@ -15,7 +15,7 @@ import java.util.Objects;
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
 
-        //Initialization
+    //Initialization
     private ActivitySplashBinding binding;
     private static int Spalsh_Screen_Time = 2000;
 
@@ -30,11 +30,11 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this , MainActivity.class);
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
                 finishAffinity();
             }
-        },Spalsh_Screen_Time);
+        }, Spalsh_Screen_Time);
 
     }
 

@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.tlMain);
         list = new ArrayList<>();
         categoryModels = new ArrayList<>();
-        adapter = new PopularHomeRecyclerAdapter(MainActivity.this  , list);
-        manager = new GridLayoutManager(MainActivity.this , 2);
+        adapter = new PopularHomeRecyclerAdapter(MainActivity.this, list);
+        manager = new GridLayoutManager(MainActivity.this, 2);
         dialog = new ProgressDialog(MainActivity.this);
         dialog.setMessage("Loading....");
         dialog.setCancelable(false);
@@ -124,26 +124,21 @@ public class MainActivity extends AppCompatActivity {
                 int totalItem = manager.getItemCount();
                 int firstVisibleItemPos = manager.findFirstVisibleItemPosition();
 
-                if(!isLoading && !isLastPage)
-                {
-                    if((visibleItem+firstVisibleItemPos) >= totalItem
-                    && firstVisibleItemPos >= 0
-                    && totalItem >= pagesize)
-                    {
+                if (!isLoading && !isLastPage) {
+                    if ((visibleItem + firstVisibleItemPos) >= totalItem
+                            && firstVisibleItemPos >= 0
+                            && totalItem >= pagesize) {
                         page++;
-                        if(Keyword == null)
-                        {
+                        if (Keyword == null) {
                             getData();
-                        }else {
+                        } else {
                             searchData(Keyword);
                             Keyword = null;
                             FromScroll = true;
                         }
 
                     }
-                }
-
-                else {
+                } else {
 
                 }
             }
@@ -152,26 +147,26 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.topmenu , menu);
+        getMenuInflater().inflate(R.menu.topmenu, menu);
         MenuItem search = menu.findItem(R.id.itMenuSearch);
-       SearchView SearchView = (androidx.appcompat.widget.SearchView) search.getActionView();
-       SearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-           @Override
-           public boolean onQueryTextSubmit(String query) {
-               return false;
+        SearchView SearchView = (androidx.appcompat.widget.SearchView) search.getActionView();
+        SearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
 
-           }
+            }
 
-           @Override
-           public boolean onQueryTextChange(String newText) {
-                   dialog.show();
-                   searchData(newText);
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                dialog.show();
+                searchData(newText);
 //                   SearchView.clearFocus();
-               return true;
+                return true;
 
 
-           }
-       });
+            }
+        });
         return true;
     }
 
@@ -179,51 +174,47 @@ public class MainActivity extends AppCompatActivity {
         binding.textView2.setVisibility(View.GONE);
         binding.rvcategory.setVisibility(View.GONE);
         binding.textView3.setText("Top Searches");
-            dialog.dismiss();
+        dialog.dismiss();
         if (!FromScroll) {
             list.clear();
         }
-            if(query.isEmpty())
-            {
-                binding.textView2.setVisibility(View.VISIBLE);
-                binding.rvcategory.setVisibility(View.VISIBLE);
-                binding.textView3.setText("Popular Searches");
-                FromSearch = true;
-               getData();
+        if (query.isEmpty()) {
+            binding.textView2.setVisibility(View.VISIBLE);
+            binding.rvcategory.setVisibility(View.VISIBLE);
+            binding.textView3.setText("Popular Searches");
+            FromSearch = true;
+            getData();
+        }
+        ApiUtilities.apiInterface().SearchImages(query, page, pagesize).enqueue(new Callback<SearchModel>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(Call<SearchModel> call, Response<SearchModel> response) {
+                if (response.body() != null) {
+
+                    list.addAll(response.body().getResults());
+                    adapter.notifyDataSetChanged();
+                }
+                Keyword = query;
             }
-            ApiUtilities.apiInterface().SearchImages(query, page, pagesize).enqueue(new Callback<SearchModel>() {
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void onResponse(Call<SearchModel> call, Response<SearchModel> response) {
-                    if(response.body() != null)
-                    {
 
-                        list.addAll(response.body().getResults());
-                        adapter.notifyDataSetChanged();
-                    }
-                    Keyword = query;
-                }
-                @Override
-                public void onFailure(Call<SearchModel> call, Throwable t) {
+            @Override
+            public void onFailure(Call<SearchModel> call, Throwable t) {
 
-                }
-            });
+            }
+        });
 
 
     }
 
 
-    private void getData()
-    {
+    private void getData() {
         isLoading = true;
-        ApiUtilities.apiInterface().getImages(page , 30).enqueue(new Callback<List<ImageModel>>() {
+        ApiUtilities.apiInterface().getImages(page, 30).enqueue(new Callback<List<ImageModel>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<List<ImageModel>> call, Response<List<ImageModel>> response) {
-                if(response.body() != null)
-                {
-                    if(FromSearch)
-                    {
+                if (response.body() != null) {
+                    if (FromSearch) {
                         list.clear();
                         FromSearch = false;
                     }
@@ -233,12 +224,10 @@ public class MainActivity extends AppCompatActivity {
                 isLoading = false;
                 dialog.dismiss();
 
-                if(list.size() > 0 )
-                {
-                    isLastPage = list.size()  < pagesize;
-                }
-                else {
-                    isLastPage =true;
+                if (list.size() > 0) {
+                    isLastPage = list.size() < pagesize;
+                } else {
+                    isLastPage = true;
                 }
             }
 

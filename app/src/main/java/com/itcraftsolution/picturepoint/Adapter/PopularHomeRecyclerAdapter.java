@@ -1,6 +1,6 @@
 package com.itcraftsolution.picturepoint.Adapter;
 
- import android.app.Activity;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -35,7 +35,7 @@ public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHome
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.rvhomepopular_sample , parent , false);
+        View view = LayoutInflater.from(context).inflate(R.layout.rvhomepopular_sample, parent, false);
         return new viewHolder(view);
     }
 
@@ -52,13 +52,13 @@ public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHome
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context , ImageDetailsActivity.class);
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context,holder.binding.igSampleImage,
+                Intent intent = new Intent(context, ImageDetailsActivity.class);
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.binding.igSampleImage,
                         Objects.requireNonNull(ViewCompat.getTransitionName(holder.binding.igSampleImage)));
-                intent.putExtra("FullImage" , imageModel.getUrls().getRegular());
-                intent.putExtra("UserName" , imageModel.getUser().getUsername());
-                intent.putExtra("UserProfile" , imageModel.getUser().getProfile_image().getMedium());
-                intent.putExtra("DownloadImage" , imageModel.getLinks().getDownload());
+                intent.putExtra("FullImage", imageModel.getUrls().getRegular());
+                intent.putExtra("UserName", imageModel.getUser().getUsername());
+                intent.putExtra("UserProfile", imageModel.getUser().getProfile_image().getMedium());
+                intent.putExtra("DownloadImage", imageModel.getLinks().getDownload());
                 context.startActivity(intent, optionsCompat.toBundle());
             }
         });
@@ -71,6 +71,7 @@ public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHome
 
     public static class viewHolder extends RecyclerView.ViewHolder {
         RvhomepopularSampleBinding binding;
+
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             binding = RvhomepopularSampleBinding.bind(itemView);
