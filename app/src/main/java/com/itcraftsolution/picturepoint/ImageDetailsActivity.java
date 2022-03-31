@@ -131,11 +131,10 @@ public class ImageDetailsActivity extends AppCompatActivity {
                     .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, File.separator + FileName + ".jpg");
             manager.enqueue(request);
 
-            Toast.makeText(ImageDetailsActivity.this, "Save To Gallery", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ImageDetailsActivity.this, "Waiting for Downloading... ", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void animateFab() {
