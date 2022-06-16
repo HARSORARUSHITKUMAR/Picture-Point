@@ -17,17 +17,17 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.itcraftsolution.picturepoint.ImageDetailsActivity;
 import com.itcraftsolution.picturepoint.Models.ImageModel;
 import com.itcraftsolution.picturepoint.R;
-import com.itcraftsolution.picturepoint.databinding.RvhomepopularSampleBinding;
+import com.itcraftsolution.picturepoint.databinding.RvhomerecentSampleBinding;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHomeRecyclerAdapter.viewHolder> {
+public class RecentRecyclerAdapter extends RecyclerView.Adapter<RecentRecyclerAdapter.viewHolder> {
 
     Context context;
     ArrayList<ImageModel> list;
 
-    public PopularHomeRecyclerAdapter(Context context, ArrayList<ImageModel> list) {
+    public RecentRecyclerAdapter(Context context, ArrayList<ImageModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -35,7 +35,7 @@ public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHome
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.rvhomepopular_sample, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.rvhomerecent_sample , parent , false);
         return new viewHolder(view);
     }
 
@@ -68,11 +68,11 @@ public class PopularHomeRecyclerAdapter extends RecyclerView.Adapter<PopularHome
     }
 
     public static class viewHolder extends RecyclerView.ViewHolder {
-        RvhomepopularSampleBinding binding;
+        RvhomerecentSampleBinding binding;
 
         public viewHolder(@NonNull View itemView) {
             super(itemView);
-            binding = RvhomepopularSampleBinding.bind(itemView);
+            binding = RvhomerecentSampleBinding.bind(itemView);
         }
     }
 }

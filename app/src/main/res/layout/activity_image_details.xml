@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp"
     android:elevation="10dp"
-    app:cardCornerRadius="6dp"
+
     tools:context=".ImageDetailsActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,82 +38,43 @@
             app:zoomage_translatable="true"
             app:zoomage_zoomable="true" />
 
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabDetailsShare"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSetWallpaper"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_8mdp"
             android:layout_marginBottom="12dp"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@color/white"
-            android:contentDescription="@string/app_name"
-            android:elevation="20dp"
-            android:src="@drawable/ic_baseline_share_24"
-            android:visibility="invisible"
-            app:borderWidth="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/fabMainDetails"
-            app:layout_constraintEnd_toEndOf="@+id/fabMainDetails"
-            app:maxImageSize="36dp" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabMainDetails"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="12dp"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@color/white"
-            android:contentDescription="@string/app_name"
-            android:elevation="20dp"
-            android:src="@drawable/ic_baseline_grain_24"
-            app:borderWidth="0dp"
+            android:background="@drawable/btn_shape"
+            android:text="Set Wallpaper"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:maxImageSize="36dp" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabDetailsDownload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@color/white"
-            android:contentDescription="@string/app_name"
-            android:elevation="20dp"
-            android:src="@drawable/ic_baseline_arrow_circle_down_24"
-            android:visibility="invisible"
-            app:borderWidth="0dp"
-            app:layout_constraintEnd_toStartOf="@+id/fabMainDetails"
-            app:layout_constraintTop_toTopOf="@+id/fabMainDetails"
-            app:maxImageSize="40dp" />
-
+            app:layout_constraintEnd_toStartOf="@+id/btnDownload"
+            app:layout_constraintStart_toEndOf="@+id/btnClose" />
 
         <ImageView
-            android:id="@+id/igDetailsProfile"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="12dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/logo64"
-            app:layout_constraintBottom_toBottomOf="@+id/fabMainDetails"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/txDetailsName"
-            android:layout_width="0dp"
+            android:id="@+id/btnDownload"
+            android:layout_width="@dimen/_42mdp"
             android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:fontFamily="serif"
-            android:gravity="center_vertical"
-            android:text="prathvik sankaliya"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/igDetailsProfile"
-            app:layout_constraintEnd_toStartOf="@+id/fabDetailsDownload"
-            app:layout_constraintStart_toEndOf="@+id/igDetailsProfile"
-            app:layout_constraintTop_toTopOf="@+id/igDetailsProfile" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:background="@drawable/btn_shape"
+            android:padding="@dimen/_4mdp"
+            android:layout_marginEnd="@dimen/_10mdp"
+            android:src="@drawable/ic_baseline_arrow_circle_down_24"
+            app:layout_constraintBottom_toBottomOf="@+id/btnSetWallpaper"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnSetWallpaper" />
 
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="@dimen/_42mdp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:background="@drawable/btn_shape"
+            android:padding="@dimen/_6mdp"
+            android:src="@drawable/ic_baseline_close_24"
+            app:layout_constraintBottom_toBottomOf="@+id/btnSetWallpaper"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnSetWallpaper" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
 

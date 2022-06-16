@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/itMenuHome"
+        android:icon="@drawable/home"
+        android:title="Home"
+        android:enabled="true"
+        />
+
+    <item
+        android:id="@+id/itMenuCat"
+        android:icon="@drawable/category"
+        android:title="Categories"
+        android:enabled="true"
+        />
+
+    <item
+        android:id="@+id/itMenuDownload"
+        android:icon="@drawable/save"
+        android:title="Download"
+        android:enabled="true"
+        />
+</menu>

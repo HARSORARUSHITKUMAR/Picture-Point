@@ -3,17 +3,17 @@ package com.itcraftsolution.picturepoint.Models;
 import java.util.ArrayList;
 
 public class SearchModel {
-    private ArrayList<ImageModel> results;
+    private ArrayList<ImageModel> photos;
 
     public SearchModel(ArrayList<ImageModel> results) {
-        this.results = results;
+        this.photos = results;
     }
 
-    public ArrayList<ImageModel> getResults() {
-        return results;
+    public ArrayList<ImageModel> getPhotos() {
+        return photos;
     }
 
-    public void setResults(ArrayList<ImageModel> results) {
-        this.results = results;
+    public void setPhotos(ArrayList<ImageModel> photos) {
+        this.photos = photos;
     }
 }

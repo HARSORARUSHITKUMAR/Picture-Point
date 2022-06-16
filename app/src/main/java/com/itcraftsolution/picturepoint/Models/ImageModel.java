@@ -2,37 +2,27 @@ package com.itcraftsolution.picturepoint.Models;
 
 public class ImageModel {
 
-    private UrlModel urls;
-    private UserModel user;
-    private DownloadModel links;
+    private UrlModel src;
+    private String url;
 
-    public ImageModel(UrlModel urls, UserModel user, DownloadModel links) {
-        this.urls = urls;
-        this.user = user;
-        this.links = links;
+    public ImageModel(UrlModel src, String url) {
+        this.src = src;
+        this.url = url;
     }
 
-    public UrlModel getUrls() {
-        return urls;
+    public UrlModel getSrc() {
+        return src;
     }
 
-    public void setUrls(UrlModel urls) {
-        this.urls = urls;
+    public void setSrc(UrlModel src) {
+        this.src = src;
     }
 
-    public UserModel getUser() {
-        return user;
+    public String getUrl() {
+        return url;
     }
 
-    public void setUser(UserModel user) {
-        this.user = user;
-    }
-
-    public DownloadModel getLinks() {
-        return links;
-    }
-
-    public void setLinks(DownloadModel links) {
-        this.links = links;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

@@ -1,17 +1,17 @@
 package com.itcraftsolution.picturepoint.Models;
 
 public class UrlModel {
-    private String regular;
+    private String portrait;
 
-    public UrlModel(String regular) {
-        this.regular = regular;
+    public UrlModel(String portrait) {
+        this.portrait = portrait;
     }
 
-    public String getRegular() {
-        return regular;
+    public String getPortrait() {
+        return portrait;
     }
 
-    public void setRegular(String regular) {
-        this.regular = regular;
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
     }
 }

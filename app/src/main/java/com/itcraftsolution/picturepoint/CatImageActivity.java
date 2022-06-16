@@ -49,7 +49,7 @@ public class CatImageActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<SearchModel> call, Response<SearchModel> response) {
                 if (response.body() != null) {
-                    list.addAll(response.body().getResults());
+                    list.addAll(response.body().getPhotos());
                     adapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(CatImageActivity.this, "" + response.message(), Toast.LENGTH_SHORT).show();

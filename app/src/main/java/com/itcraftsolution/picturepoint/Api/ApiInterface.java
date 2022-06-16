@@ -14,16 +14,16 @@ import java.util.List;
 
 public interface ApiInterface {
     //Image Get
-    @Headers("Authorization: Client-ID " + APi_KEY)
-    @GET("/photos")
-    Call<List<ImageModel>> getImages(
+    @Headers("Authorization: " + APi_KEY)
+    @GET("curated")
+    Call<SearchModel> getImages(
             @Query("page") int page,
             @Query("per_page") int perPage
     );
 
     //Search Images
-    @Headers("Authorization: Client-ID " + APi_KEY)
-    @GET("/search/photos")
+    @Headers("Authorization: " + APi_KEY)
+    @GET("search")
     Call<SearchModel> SearchImages(
             @Query("query") String query,
             @Query("page") int searchpage,

@@ -4,9 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,15 +22,20 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.itcraftsolution.picturepoint.databinding.ActivityImageDetailsBinding;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class ImageDetailsActivity extends AppCompatActivity {
 
@@ -37,6 +46,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     private DownloadManager manager;
     private Uri uri;
+    private WallpaperManager wallpaperManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +54,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
         binding = ActivityImageDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN );
         Fade fade = new Fade();
         View decor = getWindow().getDecorView();
 
@@ -56,6 +67,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
         // Load Data First
         LoadData();
 
+        wallpaperManager = WallpaperManager.getInstance(this);
         dialog = new ProgressDialog(this);
         dialog.setMessage("Downloading Image Processing ...");
         dialog.setCancelable(false);
@@ -72,32 +84,32 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
         //Set the OnclickListner in Main fab
 
-        binding.fabMainDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animateFab();
-            }
-        });
-
-        binding.fabDetailsShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_TEXT, "I'm using #PicturePoint, Share and Download Image there is much easier: "
-                            + getIntent().getStringExtra("DownloadImage") + " #PicturePoint #Wallpaper");
-                intent.setType("text/plain");
-                startActivity(Intent.createChooser(intent, null));
-            }
-        });
-
-        binding.fabDetailsDownload.setOnClickListener(new View.OnClickListener() {
+        binding.btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 DownloadImage("Download", getIntent().getStringExtra("DownloadImage"));
 
+            }
+        });
+
+        binding.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        binding.btnSetWallpaper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+
+                    Bitmap bitmap = ((BitmapDrawable)binding.igDetailZoom.getDrawable()).getBitmap();
+                    wallpaperManager.setBitmap(bitmap);
+                    Toast.makeText(ImageDetailsActivity.this, "Set WallPaper Successfully!", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -106,15 +118,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
         Glide.with(ImageDetailsActivity.this)
                 .load(getIntent().getStringExtra("FullImage"))
                 .error(R.drawable.error)
-                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.igDetailZoom);
-
-        Glide.with(ImageDetailsActivity.this)
-                .load(getIntent().getStringExtra("UserProfile"))
-                .error(R.drawable.error)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(binding.igDetailsProfile);
-        binding.txDetailsName.setText(getIntent().getStringExtra("UserName"));
 
     }
 
@@ -137,21 +141,4 @@ public class ImageDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void animateFab() {
-        if (isOpen) {
-            binding.fabMainDetails.startAnimation(rotateForward);
-            binding.fabDetailsShare.startAnimation(fabClose);
-            binding.fabDetailsDownload.startAnimation(fabClose);
-            binding.fabDetailsShare.setClickable(false);
-            binding.fabDetailsDownload.setClickable(false);
-            isOpen = false;
-        } else {
-            binding.fabMainDetails.startAnimation(rotatebackward);
-            binding.fabDetailsShare.startAnimation(fabOpen);
-            binding.fabDetailsDownload.startAnimation(fabOpen);
-            binding.fabDetailsShare.setClickable(true);
-            binding.fabDetailsDownload.setClickable(true);
-            isOpen = true;
-        }
-    }
 }
