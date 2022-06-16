@@ -85,8 +85,8 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, "I'm using #PicturePoint, Share and Download Image there is much easier: "
-                        + getIntent().getStringExtra("DownloadImage") + " #PicturePoint #Wallpaper");
+                    intent.putExtra(Intent.EXTRA_TEXT, "I'm using #PicturePoint, Share and Download Image there is much easier: "
+                            + getIntent().getStringExtra("DownloadImage") + " #PicturePoint #Wallpaper");
                 intent.setType("text/plain");
                 startActivity(Intent.createChooser(intent, null));
             }
