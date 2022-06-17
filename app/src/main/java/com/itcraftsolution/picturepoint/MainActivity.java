@@ -2,6 +2,7 @@ package com.itcraftsolution.picturepoint;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.view.Menu;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isLoading, isLastPage;
     private boolean FromSearch = false;
     private boolean FromScroll = false;
+    private SearchView searchView;
 
 
     @Override
@@ -135,6 +137,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
+        getMenuInflater().inflate(R.menu.topmenu , menu);
+        MenuItem menuItem = menu.findItem(R.id.itMenuSearch);
+        searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Type here To Search...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String imageUrl = "https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?cs=srgb&dl=pexels-sohail-nachiti-807598.jpg&fm=jpg";
+                Intent intent = new Intent(MainActivity.this , CatImageActivity.class);
+                intent.putExtra("CategoryName" , query);
+                intent.putExtra("CategoryImage" , imageUrl);
+                startActivity(intent);
 
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
 }

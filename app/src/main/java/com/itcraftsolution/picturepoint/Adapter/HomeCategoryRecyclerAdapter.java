@@ -10,11 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.itcraftsolution.picturepoint.CatImageActivity;
-import com.itcraftsolution.picturepoint.ImageDetailsActivity;
 import com.itcraftsolution.picturepoint.Models.CategoryModel;
-import com.itcraftsolution.picturepoint.Models.ImageModel;
 import com.itcraftsolution.picturepoint.R;
 import com.itcraftsolution.picturepoint.databinding.CategorySampleBinding;
 
@@ -41,7 +38,7 @@ public class HomeCategoryRecyclerAdapter extends RecyclerView.Adapter<HomeCatego
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
 
         CategoryModel model = list.get(position);
-        holder.binding.igSampleImage.setImageResource(model.getImage());
+        Glide.with(context).load(model.getImgUri()).error(R.drawable.error).into(holder.binding.igSampleImage);
         holder.binding.txSampleName.setText(model.getCategoryName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +46,7 @@ public class HomeCategoryRecyclerAdapter extends RecyclerView.Adapter<HomeCatego
             public void onClick(View v) {
                 Intent intent = new Intent(context, CatImageActivity.class);
                 intent.putExtra("CategoryName", model.getCategoryName());
+                intent.putExtra("CategoryImage", model.getImgUri());
                 context.startActivity(intent);
             }
         });

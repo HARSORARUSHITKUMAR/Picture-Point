@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.itcraftsolution.picturepoint.CustomDialog.Custom_Dialog;
 import com.itcraftsolution.picturepoint.databinding.ActivityImageDetailsBinding;
 
 import java.io.ByteArrayOutputStream;
@@ -88,7 +89,8 @@ public class ImageDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                DownloadImage("Download", getIntent().getStringExtra("DownloadImage"));
+//                DownloadImage("Download", getIntent().getStringExtra("DownloadImage"));
+                DownloadImage("PicturePoint", getIntent().getStringExtra("FullImage"));
 
             }
         });
@@ -106,9 +108,11 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
                     Bitmap bitmap = ((BitmapDrawable)binding.igDetailZoom.getDrawable()).getBitmap();
                     wallpaperManager.setBitmap(bitmap);
-                    Toast.makeText(ImageDetailsActivity.this, "Set WallPaper Successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ImageDetailsActivity.this, "Set Wallpaper SuccessFully", Toast.LENGTH_SHORT).show();
+                    finish();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Toast.makeText(ImageDetailsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -122,20 +126,45 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
     }
 
+//    private void DownloadImage(String FileName, String ImageUri) {
+//        try {
+//            File direct = new File(Environment.getExternalStorageDirectory() + "PicturePoint");
+//            if(!direct.exists())
+//            {
+//                direct.mkdirs();
+//            }
+//            manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+//            uri = Uri.parse(ImageUri);
+//            DownloadManager.Request request = new DownloadManager.Request(uri);
+//            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
+//                    DownloadManager.Request.NETWORK_MOBILE)
+//                    .setAllowedOverRoaming(false)
+//                    .setTitle(FileName)
+//                    .setAllowedNetworkTypes(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+//                    .setDestinationInExternalPublicDir("/PicturePoint",  FileName + ".jpg");
+//            manager.enqueue(request);
+//
+//            Toast.makeText(ImageDetailsActivity.this, "Waiting for Downloading... ", Toast.LENGTH_SHORT).show();
+//        } catch (Exception e) {
+//            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
     private void DownloadImage(String FileName, String ImageUri) {
         try {
+
             manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
             uri = Uri.parse(ImageUri);
             DownloadManager.Request request = new DownloadManager.Request(uri);
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
-                    DownloadManager.Request.NETWORK_MOBILE)
+                            DownloadManager.Request.NETWORK_MOBILE)
                     .setAllowedOverRoaming(false)
                     .setTitle(FileName)
                     .setAllowedNetworkTypes(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                     .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, File.separator + FileName + ".jpg");
             manager.enqueue(request);
-
-            Toast.makeText(ImageDetailsActivity.this, "Waiting for Downloading... ", Toast.LENGTH_SHORT).show();
+            finish();
+            Toast.makeText(ImageDetailsActivity.this, "Saved into Gallery", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }

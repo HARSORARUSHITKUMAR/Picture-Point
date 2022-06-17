@@ -6,15 +6,90 @@
     android:layout_height="match_parent"
     tools:context=".CatImageActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCatImage"
+    <ImageView
+        android:id="@+id/igCatImage"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="@dimen/_170mdp"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/liteblack"
+        app:layout_constraintBottom_toBottomOf="@+id/igCatImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/igCatImage" />
+
+    <TextView
+        android:id="@+id/txCatName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="serif"
+        android:text="Category Name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_19font_mdp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/igCatImage" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_8mdp"
+        android:layout_marginTop="@dimen/_6mdp"
+        android:paddingHorizontal="@dimen/_12mdp"
+        android:paddingVertical="@dimen/_5mdp"
+        android:background="@drawable/btn_shape"
+        android:gravity="center"
+        android:text="All Photos"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/igCatImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txCatName" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:cardCornerRadius="@dimen/_20mdp"
+        app:cardElevation="@dimen/_18mdp"
+        android:layout_marginTop="@dimen/_32mdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCatImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/igCatImage"
+            app:layout_constraintVertical_bias="0.0">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </androidx.cardview.widget.CardView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

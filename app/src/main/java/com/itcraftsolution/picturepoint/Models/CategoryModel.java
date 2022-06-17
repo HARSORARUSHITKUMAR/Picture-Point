@@ -2,19 +2,19 @@ package com.itcraftsolution.picturepoint.Models;
 
 public class CategoryModel {
     private String CategoryName;
-    private int Image;
+    private String imgUri;
 
-    public CategoryModel(int image, String categoryName) {
-        Image = image;
+    public CategoryModel(String image, String categoryName) {
+        imgUri = image;
         CategoryName = categoryName;
     }
 
-    public int getImage() {
-        return Image;
+    public String getImgUri() {
+        return imgUri;
     }
 
-    public void setImage(int image) {
-        Image = image;
+    public void setImgUri(String imgUri) {
+        this.imgUri = imgUri;
     }
 
     public String getCategoryName() {

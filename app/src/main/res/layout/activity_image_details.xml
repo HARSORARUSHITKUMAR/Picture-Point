@@ -74,6 +74,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/btnSetWallpaper"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/btnSetWallpaper" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

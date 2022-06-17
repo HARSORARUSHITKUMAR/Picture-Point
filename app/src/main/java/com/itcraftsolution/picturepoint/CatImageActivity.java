@@ -2,12 +2,15 @@ package com.itcraftsolution.picturepoint;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.itcraftsolution.picturepoint.Adapter.PopularHomeRecyclerAdapter;
+import com.itcraftsolution.picturepoint.Adapter.RecentRecyclerAdapter;
 import com.itcraftsolution.picturepoint.Api.ApiUtilities;
 import com.itcraftsolution.picturepoint.Models.ImageModel;
 import com.itcraftsolution.picturepoint.Models.SearchModel;
@@ -23,24 +26,35 @@ public class CatImageActivity extends AppCompatActivity {
 
     private ActivityCatImageBinding binding;
     private ArrayList<ImageModel> list;
-    private PopularHomeRecyclerAdapter adapter;
+    private RecentRecyclerAdapter adapter;
     private GridLayoutManager manager;
-    private int page = 4;
-    private int pagesize = 30;
+    private int page = 1;
+    private String catName, catImage;
+    private int pagesize = 80;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityCatImageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN );
+        loadData();
         //call SearchData
-        searchData(getIntent().getStringExtra("CategoryName"));
+        searchData(catName);
         list = new ArrayList<>();
-        adapter = new PopularHomeRecyclerAdapter(this, list);
+        adapter = new RecentRecyclerAdapter(this, list);
         manager = new GridLayoutManager(this, 2);
         binding.rvCatImage.setLayoutManager(manager);
         binding.rvCatImage.setHasFixedSize(true);
         binding.rvCatImage.setAdapter(adapter);
+    }
+
+    private void loadData()
+    {
+        catName = getIntent().getStringExtra("CategoryName");
+        catImage = getIntent().getStringExtra("CategoryImage");
+        Glide.with(CatImageActivity.this).load(catImage).into(binding.igCatImage);
+        binding.txCatName.setText(catName);
     }
 
     private void searchData(String query) {
