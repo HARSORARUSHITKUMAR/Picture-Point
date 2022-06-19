@@ -3,5 +3,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-
+    <string name="Permission_Steps">Steps :\n
+    1. Click on Allow Storage Permission.\n
+    2. Find to Picture Point.\n
+    3. Allow To Manage Storage Files.\n
+    4. Come back again to app.
+        </string>
 </resources>
