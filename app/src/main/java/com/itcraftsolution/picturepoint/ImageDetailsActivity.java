@@ -1,27 +1,19 @@
 package com.itcraftsolution.picturepoint;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.os.Build.VERSION.SDK_INT;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
 import android.app.DownloadManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
 import android.transition.Fade;
 import android.view.View;
 import android.view.WindowManager;
@@ -29,12 +21,23 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
+
 import com.bumptech.glide.Glide;
-import com.itcraftsolution.picturepoint.Fragments.HomeFragment;
 import com.itcraftsolution.picturepoint.databinding.ActivityImageDetailsBinding;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
 
 public class ImageDetailsActivity extends AppCompatActivity {
 
@@ -46,7 +49,11 @@ public class ImageDetailsActivity extends AppCompatActivity {
     private DownloadManager manager;
     private Uri uri;
     private WallpaperManager wallpaperManager;
-    private boolean isGranted = false;
+    private static String APP_DIR = Environment.getExternalStorageDirectory().getAbsolutePath() +
+            File.separator + "PicturePoint";
+    private OutputStream outputStream;
+    private static final String CHANNEL_NAME = "IT_CRAFT_SOLUTION";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +89,6 @@ public class ImageDetailsActivity extends AppCompatActivity {
         fabOpen.setDuration(DURATION);
         fabClose.setDuration(DURATION);
 
-        binding.storagePermission.btnPermission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPermission();
-            }
-        });
         //Set the OnclickListner in Main fab
 
         binding.btnDownload.setOnClickListener(new View.OnClickListener() {
@@ -131,107 +132,95 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
     }
 
-//    private void DownloadImage(String FileName, String ImageUri) {
-//        try {
-//            File direct = new File(Environment.getExternalStorageDirectory() + "PicturePoint");
-//            if(!direct.exists())
-//            {
-//                direct.mkdirs();
-//            }
-//            manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-//            uri = Uri.parse(ImageUri);
-//            DownloadManager.Request request = new DownloadManager.Request(uri);
-//            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
-//                    DownloadManager.Request.NETWORK_MOBILE)
-//                    .setAllowedOverRoaming(false)
-//                    .setTitle(FileName)
-//                    .setAllowedNetworkTypes(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-//                    .setDestinationInExternalPublicDir("/PicturePoint",  FileName + ".jpg");
-//            manager.enqueue(request);
-//
-//            Toast.makeText(ImageDetailsActivity.this, "Waiting for Downloading... ", Toast.LENGTH_SHORT).show();
-//        } catch (Exception e) {
-//            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
-    private void DownloadImage(String FileName, String ImageUri) {
-        try {
-
-            manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-            uri = Uri.parse(ImageUri);
-            DownloadManager.Request request = new DownloadManager.Request(uri);
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
-                            DownloadManager.Request.NETWORK_MOBILE)
-                    .setAllowedOverRoaming(false)
-                    .setTitle(FileName)
-                    .setAllowedNetworkTypes(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, File.separator + FileName + ".jpg");
-            manager.enqueue(request);
-            finish();
-            Toast.makeText(ImageDetailsActivity.this, "Saved into Gallery", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void showPermission()
+    private void DownloadImage(String FileName , String ImageUri)
     {
-        // permission for 23 to 29 SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(ContextCompat.checkSelfPermission(ImageDetailsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(ImageDetailsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},100);
+        File file = new File(APP_DIR);
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                Toast.makeText(ImageDetailsActivity.this, "Somthing went wrong !!", Toast.LENGTH_SHORT).show();
             }
         }
 
-        // permission for R or above SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        {
-            if(!Environment.isExternalStorageManager())
-            {
-                try {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    intent.addCategory("android.intent.category.DEFAULT");
-                    intent.setData(Uri.parse(String.format("package:%s", ImageDetailsActivity.this.getPackageName())));
-                    startActivityIfNeeded(intent, 101);
-                } catch (Exception e) {
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    startActivityIfNeeded(intent, 101);
-                }
+        String fileName;
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+        String currentDateTime = sdf.format(new Date());
+
+            fileName = "IMG_" + currentDateTime + ".jpg";
+            File mediaFile = new File(file + File.separator + fileName);
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) binding.igDetailZoom.getDrawable();
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+
+            try {
+                    outputStream = new FileOutputStream(mediaFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
+            bitmap.compress(Bitmap.CompressFormat.JPEG , 100 , outputStream);
+            showNotification(ImageDetailsActivity.this , mediaFile);
+        try {
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(Uri.fromFile(mediaFile));
+        sendBroadcast(intent);
+
     }
 
-    private boolean checkPermission() {
-        if (SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.isExternalStorageManager();
-        } else {
-            int write = ContextCompat.checkSelfPermission(getApplicationContext(),
-                    WRITE_EXTERNAL_STORAGE);
-            int read = ContextCompat.checkSelfPermission(getApplicationContext(),
-                    READ_EXTERNAL_STORAGE);
 
-            return write == PackageManager.PERMISSION_GRANTED &&
-                    read == PackageManager.PERMISSION_GRANTED;
+    private static void showNotification(Context context,  File destFile) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            makeNotificationChannel(context);
         }
+
+        Uri data = FileProvider.getUriForFile(context, "com.itcraftsolution.picturepoint" + ".provider", new File(destFile.getAbsolutePath()));
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+
+            intent.setDataAndType(data, "image/*");
+
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(context, 0, intent, 0);
+
+        NotificationCompat.Builder notification =
+                new NotificationCompat.Builder(context, CHANNEL_NAME);
+
+        notification.setSmallIcon(R.drawable.logo256)
+                .setContentTitle(destFile.getName())
+                .setContentText("File Saved to" + APP_DIR)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+
+        assert notificationManager != null;
+        notificationManager.notify(new Random().nextInt(), notification.build());
+
+        Toast.makeText( context,"Saved to Gallery", Toast.LENGTH_LONG).show();
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static void makeNotificationChannel(Context context) {
 
-        if(checkPermission())
-        {
-            isGranted = true;
-            binding.storagePermission.getRoot().setVisibility(View.GONE);
-            getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer , new HomeFragment()).commit();
-        }else {
-            Toast.makeText(this, "Please Allow Storage Permission", Toast.LENGTH_SHORT).show();
-        }
+        NotificationChannel channel = new NotificationChannel(CHANNEL_NAME, "Saved", NotificationManager.IMPORTANCE_DEFAULT);
+        channel.setShowBadge(true);
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+
+        assert notificationManager != null;
+        notificationManager.createNotificationChannel(channel);
     }
 }
