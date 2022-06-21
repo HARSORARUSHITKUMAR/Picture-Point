@@ -52,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.itMenuDownload:
                            temp = new SavedFragment();
                            break;
-
-
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer, temp).commit();
                  return true;

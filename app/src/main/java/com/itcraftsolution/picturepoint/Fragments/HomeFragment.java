@@ -2,6 +2,7 @@ package com.itcraftsolution.picturepoint.Fragments;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.itcraftsolution.picturepoint.R;
 import com.itcraftsolution.picturepoint.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,6 +50,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(getLayoutInflater());
 
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
         list = new ArrayList<>();
         adapter = new PopularHomeRecyclerAdapter(requireContext() , list);
         binding.rvMostPopular.setLayoutManager(new LinearLayoutManager(requireContext()  , RecyclerView.HORIZONTAL , false));

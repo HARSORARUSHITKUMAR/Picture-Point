@@ -1,10 +1,8 @@
 package com.itcraftsolution.picturepoint;
 
-import android.app.DownloadManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +15,6 @@ import android.os.Environment;
 import android.transition.Fade;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -37,19 +33,14 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 
 public class ImageDetailsActivity extends AppCompatActivity {
 
     private ActivityImageDetailsBinding binding;
-    private Animation fabOpen, fabClose, rotateForward, rotatebackward;
-    private boolean isOpen = false;
-    private int DURATION = 300;
-    private ProgressDialog dialog;
-    private DownloadManager manager;
-    private Uri uri;
     private WallpaperManager wallpaperManager;
-    private static String APP_DIR = Environment.getExternalStorageDirectory().getAbsolutePath() +
+    private static final String APP_DIR = Environment.getExternalStorageDirectory().getAbsolutePath() +
             File.separator + "PicturePoint";
     private OutputStream outputStream;
     private static final String CHANNEL_NAME = "IT_CRAFT_SOLUTION";
@@ -75,21 +66,6 @@ public class ImageDetailsActivity extends AppCompatActivity {
         LoadData();
 
         wallpaperManager = WallpaperManager.getInstance(this);
-        dialog = new ProgressDialog(this);
-        dialog.setMessage("Downloading Image Processing ...");
-        dialog.setCancelable(false);
-
-
-        fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
-        rotateForward = AnimationUtils.loadAnimation(this, R.anim.rotate_forward);
-        rotatebackward = AnimationUtils.loadAnimation(this, R.anim.rotate_backward);
-        rotateForward.setDuration(DURATION);
-        rotatebackward.setDuration(DURATION);
-        fabOpen.setDuration(DURATION);
-        fabClose.setDuration(DURATION);
-
-        //Set the OnclickListner in Main fab
 
         binding.btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +98,38 @@ public class ImageDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        binding.btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri imageUri = Uri.parse(getIntent().getStringExtra("FullImage"));
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_TEXT, "I'm using @PicturePoint app: https://play.google.com/store/apps/details?id=com.itcraftsolution.picturepoint . #Wallpaper #PicturePoint");
+                intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                startActivity(Intent.createChooser(intent , "Share"));
+            }
+        });
+
+        binding.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(getIntent().getStringExtra("FullImage"));
+                File fdelete = new File(uri.getPath());
+                if (fdelete.exists()) {
+                    if (fdelete.delete()) {
+                        System.out.println("file Deleted :" + uri.getPath());
+                        Toast.makeText(ImageDetailsActivity.this, "file Deleted :" + uri.getPath(), Toast.LENGTH_LONG).show();
+                    } else {
+                        System.out.println("file not Deleted :" + uri.getPath());
+                        Toast.makeText(ImageDetailsActivity.this, "file not Deleted :" + uri.getPath(), Toast.LENGTH_LONG).show();
+                    }
+                }
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+//                        Uri.parse("file://" +  Environment.getExternalStorageDirectory())));
+                        Uri.parse(APP_DIR)));
+            }
+        });
     }
 
     private void LoadData() {
@@ -129,7 +137,13 @@ public class ImageDetailsActivity extends AppCompatActivity {
                 .load(getIntent().getStringExtra("FullImage"))
                 .error(R.drawable.error)
                 .into(binding.igDetailZoom);
-
+        if(getIntent().getStringExtra("DownloadImage").equals("saved"))
+        {
+            binding.btnShare.setVisibility(View.VISIBLE);
+            binding.btnDelete.setVisibility(View.VISIBLE);
+            binding.btnClose.setVisibility(View.GONE);
+            binding.btnDownload.setVisibility(View.GONE);
+        }
     }
 
     private void DownloadImage(String FileName , String ImageUri)

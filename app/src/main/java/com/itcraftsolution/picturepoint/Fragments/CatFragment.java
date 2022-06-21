@@ -2,6 +2,7 @@ package com.itcraftsolution.picturepoint.Fragments;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import com.itcraftsolution.picturepoint.R;
 import com.itcraftsolution.picturepoint.databinding.FragmentCatBinding;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class CatFragment extends Fragment {
@@ -36,6 +38,7 @@ public class CatFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentCatBinding.inflate(getLayoutInflater());
 
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
         list = new ArrayList<>();
 
         list.add(new CategoryModel("https://images.pexels.com/photos/5011647/pexels-photo-5011647.jpeg?cs=srgb&dl=pexels-uzunov-rostislav-5011647.jpg&fm=jpg" , "3D"));
