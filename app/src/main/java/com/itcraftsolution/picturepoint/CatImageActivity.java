@@ -1,12 +1,15 @@
 package com.itcraftsolution.picturepoint;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.itcraftsolution.picturepoint.Adapter.PopularHomeRecyclerAdapter;
@@ -28,9 +31,13 @@ public class CatImageActivity extends AppCompatActivity {
     private ArrayList<ImageModel> list;
     private RecentRecyclerAdapter adapter;
     private GridLayoutManager manager;
-    private int page = 1;
     private String catName, catImage;
-    private int pagesize = 80;
+    private ProgressDialog dialog;
+
+    private int page = 1;
+    private int pageSize = 80;
+    private boolean isLoading ;
+    private boolean isLastPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,13 @@ public class CatImageActivity extends AppCompatActivity {
         binding = ActivityCatImageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN );
+
+        dialog = new ProgressDialog(CatImageActivity.this);
+        dialog.setMessage("Loading...");
+        dialog.setCancelable(false);
+        dialog.show();
+
+
         loadData();
         //call SearchData
         searchData(catName);
@@ -47,6 +61,31 @@ public class CatImageActivity extends AppCompatActivity {
         binding.rvCatImage.setLayoutManager(manager);
         binding.rvCatImage.setHasFixedSize(true);
         binding.rvCatImage.setAdapter(adapter);
+
+        binding.rvCatImage.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItem = manager.getChildCount();
+                int totalItem = manager.getItemCount();
+                int firstVisibleItemPos = manager.findFirstVisibleItemPosition();
+
+
+                if(!isLoading && !isLastPage)
+                {
+                    if((visibleItem + firstVisibleItemPos >= totalItem) && firstVisibleItemPos >= 0 && totalItem >= pageSize)
+                    {
+                        page++;
+                       searchData(catName);
+                    }
+                }
+            }
+        });
     }
 
     private void loadData()
@@ -58,20 +97,29 @@ public class CatImageActivity extends AppCompatActivity {
     }
 
     private void searchData(String query) {
-        ApiUtilities.apiInterface().SearchImages(query, page, pagesize).enqueue(new Callback<SearchModel>() {
+        isLoading = true;
+        ApiUtilities.apiInterface().SearchImages(query, page, pageSize).enqueue(new Callback<SearchModel>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<SearchModel> call, Response<SearchModel> response) {
                 if (response.body() != null) {
                     list.addAll(response.body().getPhotos());
                     adapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(CatImageActivity.this, "" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+                isLoading = false;
+                dialog.dismiss();
+
+                if(list.size() > 0)
+                {
+                    isLastPage = list.size() < pageSize;
+                }else{
+                    isLastPage = true;
                 }
             }
 
             @Override
             public void onFailure(Call<SearchModel> call, Throwable t) {
+                dialog.dismiss();
                 Toast.makeText(CatImageActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

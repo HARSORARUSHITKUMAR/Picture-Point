@@ -89,5 +89,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void onBackPressed() {
 
+        if(binding.bottomNavigationView.getSelectedItemId() == R.id.itMenuHome)
+        {
+            super.onBackPressed();
+        }else{
+            binding.bottomNavigationView.setSelectedItemId(R.id.itMenuHome);
+        }
+    }
 }

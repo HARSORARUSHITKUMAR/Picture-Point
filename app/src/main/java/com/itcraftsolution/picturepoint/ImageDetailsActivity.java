@@ -23,6 +23,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
+import com.itcraftsolution.picturepoint.Fragments.HomeFragment;
 import com.itcraftsolution.picturepoint.databinding.ActivityImageDetailsBinding;
 
 import java.io.File;
@@ -118,16 +119,16 @@ public class ImageDetailsActivity extends AppCompatActivity {
                 File fdelete = new File(uri.getPath());
                 if (fdelete.exists()) {
                     if (fdelete.delete()) {
-                        System.out.println("file Deleted :" + uri.getPath());
-                        Toast.makeText(ImageDetailsActivity.this, "file Deleted :" + uri.getPath(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(ImageDetailsActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finishAffinity();
                     } else {
-                        System.out.println("file not Deleted :" + uri.getPath());
                         Toast.makeText(ImageDetailsActivity.this, "file not Deleted :" + uri.getPath(), Toast.LENGTH_LONG).show();
                     }
                 }
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
-//                        Uri.parse("file://" +  Environment.getExternalStorageDirectory())));
-                        Uri.parse(APP_DIR)));
+
+
             }
         });
     }
@@ -186,7 +187,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         intent.setData(Uri.fromFile(mediaFile));
         sendBroadcast(intent);
-
+        finish();
     }
 
 
@@ -237,4 +238,5 @@ public class ImageDetailsActivity extends AppCompatActivity {
         assert notificationManager != null;
         notificationManager.createNotificationChannel(channel);
     }
+
 }
