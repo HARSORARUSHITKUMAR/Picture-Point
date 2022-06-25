@@ -8,11 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -23,7 +25,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
-import com.itcraftsolution.picturepoint.Fragments.HomeFragment;
 import com.itcraftsolution.picturepoint.databinding.ActivityImageDetailsBinding;
 
 import java.io.File;
@@ -34,7 +35,6 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Random;
 
 public class ImageDetailsActivity extends AppCompatActivity {
@@ -73,7 +73,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 //                DownloadImage("Download", getIntent().getStringExtra("DownloadImage"));
-                DownloadImage("PicturePoint", getIntent().getStringExtra("FullImage"));
+                DownloadImage();
 
             }
         });
@@ -117,17 +117,17 @@ public class ImageDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Uri uri = Uri.parse(getIntent().getStringExtra("FullImage"));
                 File fdelete = new File(uri.getPath());
-                if (fdelete.exists()) {
-                    if (fdelete.delete()) {
-                        Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(ImageDetailsActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finishAffinity();
-                    } else {
-                        Toast.makeText(ImageDetailsActivity.this, "file not Deleted :" + uri.getPath(), Toast.LENGTH_LONG).show();
-                    }
-                }
-
+//                if (fdelete.exists()) {
+//                    if (fdelete.delete()) {
+//                        Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
+//                        Intent intent = new Intent(ImageDetailsActivity.this, MainActivity.class);
+//                        startActivity(intent);
+//                        finishAffinity();
+//                    } else {
+//                        Toast.makeText(ImageDetailsActivity.this, "file not Deleted :" + uri.getPath(), Toast.LENGTH_LONG).show();
+//                    }
+//                }
+                    DeleteAndScanFile(ImageDetailsActivity.this, getIntent().getStringExtra("FullImage"), fdelete);
 
             }
         });
@@ -147,7 +147,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void DownloadImage(String FileName , String ImageUri)
+    private void DownloadImage()
     {
         File file = new File(APP_DIR);
         if (!file.exists()) {
@@ -239,4 +239,36 @@ public class ImageDetailsActivity extends AppCompatActivity {
         notificationManager.createNotificationChannel(channel);
     }
 
+    private void DeleteAndScanFile(final Context context, String path,
+                                   final File fi) {
+        String fpath = path.substring(path.lastIndexOf("/") + 1);
+        Log.i("fpath", fpath);
+        try {
+            MediaScannerConnection.scanFile(context, new String[] { Environment
+                            .getExternalStorageDirectory().toString()
+                            + "/PicturePoint/"
+                            + fpath.toString() }, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+                            if (uri != null) {
+                                context.getContentResolver().delete(uri, null,
+                                        null);
+                            }
+                            fi.delete();
+                            System.out.println("file Deleted :" + fi.getPath());
+                            Log.i("ExternalStorage", "file Deleted :" + fi.getPath());
+                            Log.i("ExternalStorage", "Scanned " + path + ":");
+                            Log.i("ExternalStorage", "-> uri=" + uri);
+
+                            Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(ImageDetailsActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }
