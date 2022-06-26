@@ -75,6 +75,12 @@ public class CatFragment extends Fragment {
         binding.rvCat.setHasFixedSize(true);
         binding.rvCat.setLayoutManager(new LinearLayoutManager(requireContext()));
 
+        if(list.isEmpty())
+        {
+            binding.rvCat.setVisibility(View.GONE);
+            binding.llNotFound.setVisibility(View.VISIBLE);
+        }
+
         return binding.getRoot();
     }
 }

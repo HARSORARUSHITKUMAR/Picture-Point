@@ -84,10 +84,37 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/igCatImage"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintVertical_bias="0.0"/>
 
+        <LinearLayout
+            android:id="@+id/llNotFound"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txRecent">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <ImageView
+                android:layout_width="@dimen/_150mdp"
+                android:layout_height="@dimen/_150mdp"
+                android:src="@drawable/error"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Images Not Found"
+                android:textSize="@dimen/_22font_mdp"
+                android:textStyle="bold"
+                android:fontFamily="serif"
+                />
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 

@@ -14,7 +14,8 @@
         android:layout_marginStart="@dimen/_10mdp"
         android:fontFamily="serif"
         android:text="Recent"
-        android:textColor="@color/lightblack"
+        android:layout_marginTop="@dimen/_6mdp"
+        android:textColor="@color/font_color"
         android:textSize="@dimen/_20font_mdp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,6 +33,36 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txRecent" />
+
+    <LinearLayout
+        android:id="@+id/llNotFound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txRecent">
+
+        <ImageView
+            android:layout_width="@dimen/_150mdp"
+            android:layout_height="@dimen/_150mdp"
+            android:src="@drawable/error"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Images Not Found"
+            android:textSize="@dimen/_22font_mdp"
+            android:textStyle="bold"
+            android:fontFamily="serif"
+            />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!-- <TextView

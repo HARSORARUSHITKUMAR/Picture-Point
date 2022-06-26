@@ -25,7 +25,7 @@
         android:fontFamily="serif"
         android:gravity="center"
         android:text="Picture Point"
-        android:textColor="@color/lightblack"
+        android:textColor="@color/font_color"
         android:textSize="23sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

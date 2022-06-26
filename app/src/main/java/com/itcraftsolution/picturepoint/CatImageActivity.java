@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -65,6 +66,7 @@ public class CatImageActivity extends AppCompatActivity {
         binding.rvCatImage.setHasFixedSize(true);
         binding.rvCatImage.setAdapter(adapter);
 
+
         binding.rvCatImage.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -117,6 +119,11 @@ public class CatImageActivity extends AppCompatActivity {
                     isLastPage = list.size() < pageSize;
                 }else{
                     isLastPage = true;
+                }
+                if(list.isEmpty())
+                {
+                    binding.rvCatImage.setVisibility(View.GONE);
+                    binding.llNotFound.setVisibility(View.VISIBLE);
                 }
             }
 

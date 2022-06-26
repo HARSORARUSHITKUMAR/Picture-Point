@@ -53,10 +53,18 @@ public class SplashActivity extends AppCompatActivity {
                     binding.storagePermission.getRoot().setVisibility(View.VISIBLE);
                     binding.imageView3.setVisibility(View.GONE);
                     binding.txPicturePoint.setVisibility(View.GONE);
+                }else
+                {
+                    binding.imageView3.setVisibility(View.VISIBLE);
+                    binding.txPicturePoint.setVisibility(View.VISIBLE);
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finishAffinity();
                 }
-
             }
         }, Spalsh_Screen_Time);
+
+
 
         binding.storagePermission.btnPermission.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,13 +130,6 @@ public class SplashActivity extends AppCompatActivity {
 
         }else {
             Toast.makeText(this, "Please Allow Storage Permission", Toast.LENGTH_SHORT).show();
-        }
-        if(isGranted) {
-            binding.imageView3.setVisibility(View.VISIBLE);
-            binding.txPicturePoint.setVisibility(View.VISIBLE);
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-            startActivity(intent);
-            finishAffinity();
         }
 
     }

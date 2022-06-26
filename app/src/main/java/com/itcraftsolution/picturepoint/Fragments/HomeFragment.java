@@ -149,6 +149,12 @@ public class HomeFragment extends Fragment {
                 }else{
                     isLastPage = true;
                 }
+                if(resentList.isEmpty())
+                {
+                    binding.rvRecent.setVisibility(View.GONE);
+                    binding.llNotFound.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override

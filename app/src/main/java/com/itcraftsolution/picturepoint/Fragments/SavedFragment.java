@@ -68,6 +68,11 @@ public class SavedFragment extends Fragment {
                 binding.savedRefershView.setRefreshing(false);
             }
         });
+        if(list.isEmpty())
+        {
+            binding.rvSaved.setVisibility(View.GONE);
+            binding.llNotFound.setVisibility(View.VISIBLE);
+        }
         return binding.getRoot();
     }
     private void getData(File file)
@@ -97,6 +102,7 @@ public class SavedFragment extends Fragment {
 
                 list.add(model);
             }
+
         }
     }
 }
