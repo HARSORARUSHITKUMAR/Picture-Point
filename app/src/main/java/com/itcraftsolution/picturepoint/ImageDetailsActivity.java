@@ -6,9 +6,11 @@ import android.app.PendingIntent;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
+import com.itcraftsolution.picturepoint.Utils.NetworkChangeListner;
 import com.itcraftsolution.picturepoint.databinding.ActivityImageDetailsBinding;
 
 import java.io.File;
@@ -45,6 +48,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
             File.separator + "PicturePoint";
     private OutputStream outputStream;
     private static final String CHANNEL_NAME = "IT_CRAFT_SOLUTION";
+    private final NetworkChangeListner networkChangeListner = new NetworkChangeListner();
 
 
     @Override
@@ -270,5 +274,18 @@ public class ImageDetailsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListner, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListner);
+        super.onStop();
     }
 }

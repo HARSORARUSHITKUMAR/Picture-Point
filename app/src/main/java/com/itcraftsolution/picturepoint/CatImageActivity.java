@@ -2,6 +2,8 @@ package com.itcraftsolution.picturepoint;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import com.itcraftsolution.picturepoint.Adapter.RecentRecyclerAdapter;
 import com.itcraftsolution.picturepoint.Api.ApiUtilities;
 import com.itcraftsolution.picturepoint.Models.ImageModel;
 import com.itcraftsolution.picturepoint.Models.SearchModel;
+import com.itcraftsolution.picturepoint.Utils.NetworkChangeListner;
 import com.itcraftsolution.picturepoint.databinding.ActivityCatImageBinding;
 
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ public class CatImageActivity extends AppCompatActivity {
     private GridLayoutManager manager;
     private String catName, catImage;
     private ProgressDialog dialog;
-
+    private final NetworkChangeListner networkChangeListner = new NetworkChangeListner();
     private int page = 1;
     private int pageSize = 80;
     private boolean isLoading ;
@@ -125,5 +128,18 @@ public class CatImageActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListner, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListner);
+        super.onStop();
     }
 }

@@ -7,7 +7,9 @@ import static android.os.Build.VERSION.SDK_INT;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.itcraftsolution.picturepoint.Utils.NetworkChangeListner;
 import com.itcraftsolution.picturepoint.databinding.ActivitySplashBinding;
 
 
@@ -31,6 +34,7 @@ public class SplashActivity extends AppCompatActivity {
     private ActivitySplashBinding binding;
     private static int Spalsh_Screen_Time = 2000;
     private boolean isGranted = false;
+    private final NetworkChangeListner networkChangeListner = new NetworkChangeListner();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +124,8 @@ public class SplashActivity extends AppCompatActivity {
             Toast.makeText(this, "Please Allow Storage Permission", Toast.LENGTH_SHORT).show();
         }
         if(isGranted) {
+            binding.imageView3.setVisibility(View.VISIBLE);
+            binding.txPicturePoint.setVisibility(View.VISIBLE);
             Intent intent = new Intent(SplashActivity.this, MainActivity.class);
             startActivity(intent);
             finishAffinity();
@@ -127,4 +133,16 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListner, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListner);
+        super.onStop();
+    }
 }

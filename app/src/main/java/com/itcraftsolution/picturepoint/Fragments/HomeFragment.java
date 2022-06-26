@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.itcraftsolution.picturepoint.Adapter.PopularHomeRecyclerAdapter;
@@ -46,7 +45,7 @@ public class HomeFragment extends Fragment {
     private ProgressDialog dialog;
 
     private int page = 1;
-    private int pageSize = 80;
+    private final int pageSize = 80;
     private boolean isLoading ;
     private boolean isLastPage;
 
@@ -57,17 +56,17 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(getLayoutInflater());
 
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
-        list = new ArrayList<>();
+//        list = new ArrayList<>();
         dialog = new ProgressDialog(requireContext());
         dialog.setMessage("Loading...");
         dialog.setCancelable(false);
         dialog.show();
 
-        adapter = new PopularHomeRecyclerAdapter(requireContext() , list);
-        binding.rvMostPopular.setLayoutManager(new LinearLayoutManager(requireContext()  , RecyclerView.HORIZONTAL , false));
-        binding.rvMostPopular.setHasFixedSize(true);
-        binding.rvMostPopular.setAdapter(adapter);
-        getSearchImage("most popular");
+//        adapter = new PopularHomeRecyclerAdapter(requireContext() , list);
+//        binding.rvMostPopular.setLayoutManager(new LinearLayoutManager(requireContext()  , RecyclerView.HORIZONTAL , false));
+//        binding.rvMostPopular.setHasFixedSize(true);
+//        binding.rvMostPopular.setAdapter(adapter);
+//        getSearchImage("most popular");
 
         resentList = new ArrayList<>();
         recentRecyclerAdapter = new RecentRecyclerAdapter(requireContext() , resentList);

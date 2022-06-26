@@ -1,6 +1,8 @@
 package com.itcraftsolution.picturepoint;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +16,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.itcraftsolution.picturepoint.Fragments.CatFragment;
 import com.itcraftsolution.picturepoint.Fragments.HomeFragment;
 import com.itcraftsolution.picturepoint.Fragments.SavedFragment;
+import com.itcraftsolution.picturepoint.Utils.NetworkChangeListner;
 import com.itcraftsolution.picturepoint.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,8 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private int page = 7;
     private int pagesize = 30;
     private SearchView searchView;
-
-
+    private final NetworkChangeListner networkChangeListner = new NetworkChangeListner();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.tlMain);
+
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer, new HomeFragment()).commit();
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
     @Override
     public void onBackPressed() {
 
@@ -98,5 +102,18 @@ public class MainActivity extends AppCompatActivity {
         }else{
             binding.bottomNavigationView.setSelectedItemId(R.id.itMenuHome);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListner, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListner);
+        super.onStop();
     }
 }
