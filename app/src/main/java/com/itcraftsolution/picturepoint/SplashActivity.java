@@ -33,7 +33,6 @@ public class SplashActivity extends AppCompatActivity {
     //Initialization
     private ActivitySplashBinding binding;
     private static int Spalsh_Screen_Time = 2000;
-    private boolean isGranted = false;
     private final NetworkChangeListner networkChangeListner = new NetworkChangeListner();
 
     @Override
@@ -47,92 +46,14 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
-                if(!isGranted)
-                {
-                    binding.storagePermission.getRoot().setVisibility(View.VISIBLE);
-                    binding.imageView3.setVisibility(View.GONE);
-                    binding.txPicturePoint.setVisibility(View.GONE);
-                }else
-                {
-                    binding.imageView3.setVisibility(View.VISIBLE);
-                    binding.txPicturePoint.setVisibility(View.VISIBLE);
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finishAffinity();
-                }
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
+                finishAffinity();
             }
         }, Spalsh_Screen_Time);
 
-
-
-        binding.storagePermission.btnPermission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPermission();
-            }
-        });
     }
 
-    private void showPermission()
-    {
-        // permission for 23 to 29 SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},100);
-            }
-        }
-
-        // permission for R or above SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        {
-            if(!Environment.isExternalStorageManager())
-            {
-                try {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    intent.addCategory("android.intent.category.DEFAULT");
-                    intent.setData(Uri.parse(String.format("package:%s", SplashActivity.this.getPackageName())));
-                    startActivityIfNeeded(intent, 101);
-                } catch (Exception e) {
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    startActivityIfNeeded(intent, 101);
-                }
-
-            }
-        }
-    }
-
-    private boolean checkPermission() {
-        if (SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.isExternalStorageManager();
-        } else {
-            int write = ContextCompat.checkSelfPermission(getApplicationContext(),
-                    WRITE_EXTERNAL_STORAGE);
-            int read = ContextCompat.checkSelfPermission(getApplicationContext(),
-                    READ_EXTERNAL_STORAGE);
-
-            return write == PackageManager.PERMISSION_GRANTED &&
-                    read == PackageManager.PERMISSION_GRANTED;
-        }
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(checkPermission())
-        {
-            isGranted = true;
-            binding.storagePermission.getRoot().setVisibility(View.GONE);
-
-        }else {
-            Toast.makeText(this, "Please Allow Storage Permission", Toast.LENGTH_SHORT).show();
-        }
-
-    }
 
     @Override
     protected void onStart() {

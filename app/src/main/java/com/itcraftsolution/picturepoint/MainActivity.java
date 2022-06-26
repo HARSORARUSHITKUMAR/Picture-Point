@@ -1,15 +1,29 @@
 package com.itcraftsolution.picturepoint;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION.SDK_INT;
+
+import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationBarView;
@@ -26,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private int pagesize = 30;
     private SearchView searchView;
     private final NetworkChangeListner networkChangeListner = new NetworkChangeListner();
-
+    private boolean isGranted = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.tlMain);
 
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer, new HomeFragment()).commit();
+        if(!isGranted)
+        {
+            binding.storagePermission.getRoot().setVisibility(View.VISIBLE);
+            binding.clMainView.setVisibility(View.GONE);
+        }
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -61,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        binding.storagePermission.btnPermission.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPermission();
+            }
+        });
 
     }
 
@@ -92,6 +115,51 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    private void showPermission()
+    {
+        // permission for 23 to 29 SDK
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},100);
+            }
+        }
+
+        // permission for R or above SDK
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        {
+            if(!Environment.isExternalStorageManager())
+            {
+                try {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                    intent.addCategory("android.intent.category.DEFAULT");
+                    intent.setData(Uri.parse(String.format("package:%s", MainActivity.this.getPackageName())));
+                    startActivityIfNeeded(intent, 101);
+                } catch (Exception e) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                    startActivityIfNeeded(intent, 101);
+                }
+
+            }
+        }
+    }
+
+    private boolean checkPermission() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            int write = ContextCompat.checkSelfPermission(getApplicationContext(),
+                    WRITE_EXTERNAL_STORAGE);
+            int read = ContextCompat.checkSelfPermission(getApplicationContext(),
+                    READ_EXTERNAL_STORAGE);
+
+            return write == PackageManager.PERMISSION_GRANTED &&
+                    read == PackageManager.PERMISSION_GRANTED;
+        }
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -109,6 +177,24 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkChangeListner, filter);
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(checkPermission())
+        {
+            isGranted = true;
+            binding.storagePermission.getRoot().setVisibility(View.GONE);
+
+        }else {
+            Toast.makeText(this, "Please Allow Storage Permission", Toast.LENGTH_SHORT).show();
+        }
+        if(isGranted)
+        {
+            binding.clMainView.setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer, new HomeFragment()).commit();
+        }
     }
 
     @Override
