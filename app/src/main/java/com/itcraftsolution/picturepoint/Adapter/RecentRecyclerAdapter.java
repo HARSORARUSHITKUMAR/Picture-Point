@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
@@ -26,7 +28,7 @@ public class RecentRecyclerAdapter extends RecyclerView.Adapter<RecentRecyclerAd
 
     Context context;
     ArrayList<ImageModel> list;
-
+    private int lastposition = -1;
     public RecentRecyclerAdapter(Context context, ArrayList<ImageModel> list) {
         this.context = context;
         this.list = list;
@@ -49,6 +51,7 @@ public class RecentRecyclerAdapter extends RecyclerView.Adapter<RecentRecyclerAd
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.igSampleImage);
 
+        setAnimation(holder.itemView, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +76,16 @@ public class RecentRecyclerAdapter extends RecyclerView.Adapter<RecentRecyclerAd
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             binding = RvhomerecentSampleBinding.bind(itemView);
+        }
+    }
+
+    private void setAnimation(View view , int position)
+    {
+        if(position > lastposition)
+        {
+            Animation slidein = AnimationUtils.loadAnimation(context , android.R.anim.slide_in_left);
+            view.setAnimation(slidein);
+            lastposition = position;
         }
     }
 }

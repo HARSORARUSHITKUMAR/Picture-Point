@@ -62,10 +62,17 @@ public class SavedFragment extends Fragment {
         binding.savedRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                list.clear();
-                getData(PICTURE_POINT_DIR);
-                adapter.notifyDataSetChanged();
-                binding.savedRefershView.setRefreshing(false);
+                if(list.isEmpty())
+                {
+                    binding.savedRefershView.setRefreshing(false);
+                    binding.rvSaved.setVisibility(View.GONE);
+                    binding.llNotFound.setVisibility(View.VISIBLE);
+                }else{
+                    list.clear();
+                    getData(PICTURE_POINT_DIR);
+                    adapter.notifyDataSetChanged();
+                    binding.savedRefershView.setRefreshing(false);
+                }
             }
         });
         if(list.isEmpty())

@@ -1,6 +1,6 @@
 package com.itcraftsolution.picturepoint.Fragments;
 
-import android.app.ProgressDialog;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.itcraftsolution.picturepoint.Adapter.PopularHomeRecyclerAdapter;
 import com.itcraftsolution.picturepoint.Adapter.RecentRecyclerAdapter;
 import com.itcraftsolution.picturepoint.Api.ApiUtilities;
@@ -42,8 +43,6 @@ public class HomeFragment extends Fragment {
     private RecentRecyclerAdapter recentRecyclerAdapter;
     private ArrayList<ImageModel> resentList;
     private GridLayoutManager manager;
-    private ProgressDialog dialog;
-
     private int page = 1;
     private final int pageSize = 80;
     private boolean isLoading ;
@@ -57,10 +56,8 @@ public class HomeFragment extends Fragment {
 
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 //        list = new ArrayList<>();
-        dialog = new ProgressDialog(requireContext());
-        dialog.setMessage("Loading...");
-        dialog.setCancelable(false);
-        dialog.show();
+
+
 
 //        adapter = new PopularHomeRecyclerAdapter(requireContext() , list);
 //        binding.rvMostPopular.setLayoutManager(new LinearLayoutManager(requireContext()  , RecyclerView.HORIZONTAL , false));
@@ -69,6 +66,7 @@ public class HomeFragment extends Fragment {
 //        getSearchImage("most popular");
 
         resentList = new ArrayList<>();
+        binding.smLayout.startShimmer();
         recentRecyclerAdapter = new RecentRecyclerAdapter(requireContext() , resentList);
         manager = new GridLayoutManager(requireContext() , 2);
         binding.rvRecent.setLayoutManager(manager);
@@ -119,7 +117,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<SearchModel> call, Throwable t) {
-                dialog.dismiss();
+
                 Toast.makeText(requireContext(), "Not able to Find Images !!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -130,16 +128,20 @@ public class HomeFragment extends Fragment {
     {
         isLoading = true;
         ApiUtilities.apiInterface().getImages(page, pageSize).enqueue(new Callback<SearchModel>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<SearchModel> call, Response<SearchModel> response) {
                 if(response.isSuccessful())
                 {
                     assert response.body() != null;
+                    binding.smLayout.setVisibility(View.GONE);
+                    binding.smLayout.stopShimmer();
+                    binding.rvRecent.setVisibility(View.VISIBLE);
                     resentList.addAll(response.body().getPhotos());
                     recentRecyclerAdapter.notifyDataSetChanged();
                 }
                 isLoading = false;
-                dialog.dismiss();
+
 
                 // last page check
                 if(resentList.size() > 0)
@@ -159,7 +161,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<SearchModel> call, Throwable t) {
-                dialog.dismiss();
+
                 Toast.makeText(requireContext(), "Not able to Find Images !!", Toast.LENGTH_SHORT).show();
             }
         });

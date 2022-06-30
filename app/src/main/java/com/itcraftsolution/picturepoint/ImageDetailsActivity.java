@@ -131,7 +131,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
 //                        Toast.makeText(ImageDetailsActivity.this, "file not Deleted :" + uri.getPath(), Toast.LENGTH_LONG).show();
 //                    }
 //                }
-                    DeleteAndScanFile(ImageDetailsActivity.this, getIntent().getStringExtra("FullImage"), fdelete);
+                    DeleteAndScanFile( getIntent().getStringExtra("FullImage"), fdelete);
 
             }
         });
@@ -194,7 +194,6 @@ public class ImageDetailsActivity extends AppCompatActivity {
         finish();
     }
 
-
     private static void showNotification(Context context,  File destFile) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -243,37 +242,42 @@ public class ImageDetailsActivity extends AppCompatActivity {
         notificationManager.createNotificationChannel(channel);
     }
 
-    private void DeleteAndScanFile(final Context context, String path,
+    private void DeleteAndScanFile( String path,
                                    final File fi) {
-        String fpath = path.substring(path.lastIndexOf("/") + 1);
-        Log.i("fpath", fpath);
-        try {
-            MediaScannerConnection.scanFile(context, new String[] { Environment
-                            .getExternalStorageDirectory().toString()
-                            + "/PicturePoint/"
-                            + fpath.toString() }, null,
-                    new MediaScannerConnection.OnScanCompletedListener() {
-                        public void onScanCompleted(String path, Uri uri) {
-                            if (uri != null) {
-                                context.getContentResolver().delete(uri, null,
-                                        null);
+        
+            String fpath = path.substring(path.lastIndexOf("/") + 1);
+            Log.i("fpath", fpath);
+            try {
+                MediaScannerConnection.scanFile(ImageDetailsActivity.this, new String[] { Environment
+                                .getExternalStorageDirectory().toString()
+                                + "/PicturePoint/"
+                                + fpath }, null,
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            public void onScanCompleted(String path, Uri uri) {
+                                Toast.makeText(ImageDetailsActivity.this, "path : "+path + " uri : "+uri, Toast.LENGTH_LONG).show();
+                                if (uri != null) {
+                                    getContentResolver().delete(uri, null,
+                                            null);
+
+                                    Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
+
+                                }else
+                                {
+                                    if(fi.exists()) {
+                                        fi.delete();
+                                        Toast.makeText(ImageDetailsActivity.this, "path file :" + fi.getPath(), Toast.LENGTH_SHORT).show();
+                                    }
+                                    Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully null", Toast.LENGTH_LONG).show();
+
+                                }
+                                Intent intent = new Intent(ImageDetailsActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finishAffinity();
                             }
-                            fi.delete();
-                            System.out.println("file Deleted :" + fi.getPath());
-                            Log.i("ExternalStorage", "file Deleted :" + fi.getPath());
-                            Log.i("ExternalStorage", "Scanned " + path + ":");
-                            Log.i("ExternalStorage", "-> uri=" + uri);
-
-                            Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(ImageDetailsActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finishAffinity();
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     @Override
