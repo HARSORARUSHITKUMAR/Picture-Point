@@ -21,4 +21,5 @@
     <color name="black_shade_3">#22252D</color>
     <color name="dark_blue_shade">#021853</color>
     <color name="yellow">#ffa500</color>
+    <color name="shimmer_color">#BFBDBD</color>
 </resources>
