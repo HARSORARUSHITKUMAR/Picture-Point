@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.WallpaperManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.transition.Fade;
 import android.util.Log;
 import android.view.View;
@@ -121,17 +123,20 @@ public class ImageDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Uri uri = Uri.parse(getIntent().getStringExtra("FullImage"));
                 File fdelete = new File(uri.getPath());
-//                if (fdelete.exists()) {
-//                    if (fdelete.delete()) {
-//                        Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
-//                        Intent intent = new Intent(ImageDetailsActivity.this, MainActivity.class);
-//                        startActivity(intent);
-//                        finishAffinity();
-//                    } else {
-//                        Toast.makeText(ImageDetailsActivity.this, "file not Deleted :" + uri.getPath(), Toast.LENGTH_LONG).show();
-//                    }
-//                }
-                    DeleteAndScanFile( getIntent().getStringExtra("FullImage"), fdelete);
+                if (fdelete.exists()) {
+                    if (fdelete.delete()) {
+                        Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(ImageDetailsActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finishAffinity();
+                    } else {
+                        Toast.makeText(ImageDetailsActivity.this, "file not Deleted :" + uri.getPath(), Toast.LENGTH_LONG).show();
+                    }
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    intent.setData(Uri.fromFile(fdelete));
+                    sendBroadcast(intent);
+                }
+//                    DeleteAndScanFile(getIntent().getStringExtra("FullImage"), fdelete);
 
             }
         });
@@ -244,40 +249,47 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
     private void DeleteAndScanFile( String path,
                                    final File fi) {
-        
-            String fpath = path.substring(path.lastIndexOf("/") + 1);
-            Log.i("fpath", fpath);
-            try {
-                MediaScannerConnection.scanFile(ImageDetailsActivity.this, new String[] { Environment
-                                .getExternalStorageDirectory().toString()
-                                + "/PicturePoint/"
-                                + fpath }, null,
-                        new MediaScannerConnection.OnScanCompletedListener() {
-                            public void onScanCompleted(String path, Uri uri) {
-                                Toast.makeText(ImageDetailsActivity.this, "path : "+path + " uri : "+uri, Toast.LENGTH_LONG).show();
-                                if (uri != null) {
-                                    getContentResolver().delete(uri, null,
-                                            null);
 
-                                    Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
+//        String fpath = path.substring(path.lastIndexOf("/") + 1);
+//        Log.i("fpath", fpath);
+//        try {
+//            MediaScannerConnection.scanFile(ImageDetailsActivity.this, new String[] { Environment
+//                            .getExternalStorageDirectory().toString()
+//                            + "/PicturePoint/"
+//                            + fpath }, null,
+//                    new MediaScannerConnection.OnScanCompletedListener() {
+//                        public void onScanCompleted(String path, Uri uri) {
+//                            Toast.makeText(ImageDetailsActivity.this, "path : "+path + " uri : "+uri, Toast.LENGTH_LONG).show();
+//                            if (uri != null) {
+//                                getContentResolver().delete(uri, null,
+//                                        null);
+//
+//                                Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
+//
+//                            }else
+//                            {
+//                                if(fi.exists()) {
+//                                    fi.delete();
+//                                    Toast.makeText(ImageDetailsActivity.this, "path file :" + fi.getPath(), Toast.LENGTH_SHORT).show();
+//                                }
+//                                Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully null", Toast.LENGTH_LONG).show();
+//
+//                            }
+//                            Intent intent = new Intent(ImageDetailsActivity.this, MainActivity.class);
+//                            startActivity(intent);
+//                            finishAffinity();
+//                        }
+//                    });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-                                }else
-                                {
-                                    if(fi.exists()) {
-                                        fi.delete();
-                                        Toast.makeText(ImageDetailsActivity.this, "path file :" + fi.getPath(), Toast.LENGTH_SHORT).show();
-                                    }
-                                    Toast.makeText(ImageDetailsActivity.this, "Image Deleted Successfully null", Toast.LENGTH_LONG).show();
 
-                                }
-                                Intent intent = new Intent(ImageDetailsActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finishAffinity();
-                            }
-                        });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        ContentResolver resolver = this.getContentResolver();
+        Uri uri = Uri.fromFile(fi);
+        int dlt = resolver.delete(uri,null,null);
+        Toast.makeText(this, ""+dlt, Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
