@@ -32,7 +32,7 @@ public class SavedFragment extends Fragment {
     }
 
     private FragmentSavedBinding binding;
-    private File PICTURE_POINT_DIR =new File(Environment.getExternalStorageDirectory() + File.separator + "PicturePoint/");
+    private File PICTURE_POINT_DIR =new File(Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_PICTURES + File.separator + "/PicturePoint/");
     private ArrayList<ImageModel> list;
     private PopularHomeRecyclerAdapter adapter;
 
@@ -112,4 +112,6 @@ public class SavedFragment extends Fragment {
 
         }
     }
+
+
 }

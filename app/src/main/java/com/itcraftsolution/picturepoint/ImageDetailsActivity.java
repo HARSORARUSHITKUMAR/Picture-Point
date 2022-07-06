@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.WallpaperManager;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -40,14 +41,16 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 
 public class ImageDetailsActivity extends AppCompatActivity {
 
     private ActivityImageDetailsBinding binding;
     private WallpaperManager wallpaperManager;
-    private static final String APP_DIR = Environment.getExternalStorageDirectory().getAbsolutePath() +
+    private static final String APP_DIR = Environment.DIRECTORY_PICTURES +
             File.separator + "PicturePoint";
+    private File PICTURE_POINT_DIR = new File(Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_PICTURES + File.separator + "/PicturePoint/");
     private OutputStream outputStream;
     private static final String CHANNEL_NAME = "IT_CRAFT_SOLUTION";
     private final NetworkChangeListner networkChangeListner = new NetworkChangeListner();
@@ -77,9 +80,9 @@ public class ImageDetailsActivity extends AppCompatActivity {
         binding.btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                DownloadImage("Download", getIntent().getStringExtra("DownloadImage"));
-                DownloadImage();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) binding.igDetailZoom.getDrawable();
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                saveImgIntoGallery(bitmap);
 
             }
         });
@@ -158,47 +161,77 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
     private void DownloadImage()
     {
-        File file = new File(APP_DIR);
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                Toast.makeText(ImageDetailsActivity.this, "Somthing went wrong !!", Toast.LENGTH_SHORT).show();
-            }
-        }
+//        File file = new File(APP_DIR);
+//        if (!file.exists()) {
+//            if (!file.mkdirs()) {
+//                Toast.makeText(ImageDetailsActivity.this, "Somthing went wrong !!", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//
+//        String fileName;
+//
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+//        String currentDateTime = sdf.format(new Date());
+//
+//            fileName = "IMG_" + currentDateTime + ".jpg";
+//            File mediaFile = new File(file + File.separator + fileName);
+//            BitmapDrawable bitmapDrawable = (BitmapDrawable) binding.igDetailZoom.getDrawable();
+//            Bitmap bitmap = bitmapDrawable.getBitmap();
+//
+//            try {
+//                    outputStream = new FileOutputStream(mediaFile);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            bitmap.compress(Bitmap.CompressFormat.JPEG , 100 , outputStream);
+//            showNotification(ImageDetailsActivity.this , mediaFile);
+//        try {
+//            outputStream.flush();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            outputStream.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        intent.setData(Uri.fromFile(mediaFile));
+//        sendBroadcast(intent);
+//        finish();
 
-        String fileName;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
-        String currentDateTime = sdf.format(new Date());
-
-            fileName = "IMG_" + currentDateTime + ".jpg";
-            File mediaFile = new File(file + File.separator + fileName);
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) binding.igDetailZoom.getDrawable();
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-
-            try {
-                    outputStream = new FileOutputStream(mediaFile);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            bitmap.compress(Bitmap.CompressFormat.JPEG , 100 , outputStream);
-            showNotification(ImageDetailsActivity.this , mediaFile);
-        try {
-            outputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        intent.setData(Uri.fromFile(mediaFile));
-        sendBroadcast(intent);
-        finish();
     }
+    private void saveImgIntoGallery(Bitmap bitmap)
+    {
+        FileOutputStream fos;
+        try {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                {
+                    String fileName;
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+                    String currentDateTime = sdf.format(new Date());
+                    fileName = "IMG_" + currentDateTime + ".jpg";
 
+                    ContentResolver contentResolver = getContentResolver();
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+                    contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+                    contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, APP_DIR);
+                    Uri imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                    fos = (FileOutputStream) contentResolver.openOutputStream(imageUri);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                    Objects.requireNonNull(fos);
+                    File mediaFile = new File(PICTURE_POINT_DIR + File.separator + fileName);
+                    showNotification(ImageDetailsActivity.this, mediaFile);
+                    finish();
+                }
+        }catch (Exception e)
+        {
+            Toast.makeText(this, "Not Save to Gallery" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
     private static void showNotification(Context context,  File destFile) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -220,7 +253,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
         notification.setSmallIcon(R.drawable.logo256)
                 .setContentTitle(destFile.getName())
-                .setContentText("File Saved to" + APP_DIR)
+                .setContentText("File Saved to " + APP_DIR)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 

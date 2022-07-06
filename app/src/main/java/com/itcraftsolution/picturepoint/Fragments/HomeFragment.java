@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
         binding.rvRecent.setLayoutManager(manager);
         binding.rvRecent.setHasFixedSize(true);
         binding.rvRecent.setAdapter(recentRecyclerAdapter);
-        findPhotos();
+//        findPhotos();
 
         binding.rvRecent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -156,7 +156,6 @@ public class HomeFragment extends Fragment {
                     binding.rvRecent.setVisibility(View.GONE);
                     binding.llNotFound.setVisibility(View.VISIBLE);
                 }
-
             }
 
             @Override
@@ -165,5 +164,14 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(requireContext(), "Not able to Find Images !!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(resentList.isEmpty())
+        {
+            findPhotos();
+        }
     }
 }

@@ -52,11 +52,12 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.tlMain);
 
-        if(!isGranted)
-        {
-            binding.storagePermission.getRoot().setVisibility(View.VISIBLE);
-            binding.clMainView.setVisibility(View.GONE);
-        }
+//        if(!isGranted)
+//        {
+//            binding.storagePermission.getRoot().setVisibility(View.VISIBLE);
+//            binding.clMainView.setVisibility(View.GONE);
+//        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer, new HomeFragment()).commit();
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         binding.storagePermission.btnPermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPermission();
+//                showPermission();
             }
         });
 
@@ -120,52 +121,52 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void showPermission()
-    {
-        // permission for 23 to 29 SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(MainActivity.this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},100);
-            }
-        }
+//    private void showPermission()
+//    {
+//        // permission for 23 to 29 SDK
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//        {
+//            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+//                    ContextCompat.checkSelfPermission(MainActivity.this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+//            {
+//                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},100);
+//            }
+//        }
 
         // permission for R or above SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        {
-            if(!Environment.isExternalStorageManager())
-            {
-                try {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    intent.addCategory("android.intent.category.DEFAULT");
-                    intent.setData(Uri.parse(String.format("package:%s", MainActivity.this.getPackageName())));
-                    startActivityIfNeeded(intent, 101);
-                } catch (Exception e) {
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    startActivityIfNeeded(intent, 101);
-                }
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+//        {
+//            if(!Environment.isExternalStorageManager())
+//            {
+//                try {
+//                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+//                    intent.addCategory("android.intent.category.DEFAULT");
+//                    intent.setData(Uri.parse(String.format("package:%s", MainActivity.this.getPackageName())));
+//                    startActivityIfNeeded(intent, 101);
+//                } catch (Exception e) {
+//                    Intent intent = new Intent();
+//                    intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+//                    startActivityIfNeeded(intent, 101);
+//                }
+//
+//            }
+//        }
+//    }
 
-            }
-        }
-    }
+//    private boolean checkPermission() {
+//        if (SDK_INT >= Build.VERSION_CODES.R) {
+//            return Environment.isExternalStorageManager();
+//        } else {
+//            int write = ContextCompat.checkSelfPermission(getApplicationContext(),
+//                    WRITE_EXTERNAL_STORAGE);
+//            int read = ContextCompat.checkSelfPermission(getApplicationContext(),
+//                    READ_EXTERNAL_STORAGE);
+//
+//            return write == PackageManager.PERMISSION_GRANTED &&
+//                    read == PackageManager.PERMISSION_GRANTED;
+//        }
 
-    private boolean checkPermission() {
-        if (SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.isExternalStorageManager();
-        } else {
-            int write = ContextCompat.checkSelfPermission(getApplicationContext(),
-                    WRITE_EXTERNAL_STORAGE);
-            int read = ContextCompat.checkSelfPermission(getApplicationContext(),
-                    READ_EXTERNAL_STORAGE);
 
-            return write == PackageManager.PERMISSION_GRANTED &&
-                    read == PackageManager.PERMISSION_GRANTED;
-        }
-
-    }
 
     @Override
     public void onBackPressed() {
@@ -188,19 +189,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(checkPermission())
-        {
-            isGranted = true;
-            binding.storagePermission.getRoot().setVisibility(View.GONE);
-
-        }else {
-            Toast.makeText(this, "Please Allow Storage Permission", Toast.LENGTH_SHORT).show();
-        }
-        if(isGranted)
-        {
-            binding.clMainView.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer, new HomeFragment()).commit();
-        }
+//        if(checkPermission())
+//        {
+//            isGranted = true;
+//            binding.storagePermission.getRoot().setVisibility(View.GONE);
+//
+//        }else {
+//            Toast.makeText(this, "Please Allow Storage Permission", Toast.LENGTH_SHORT).show();
+//        }
+//        if(isGranted)
+//        {
+//            binding.clMainView.setVisibility(View.VISIBLE);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer, new HomeFragment()).commit();
+//        }
     }
 
     @Override

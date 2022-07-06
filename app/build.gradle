@@ -9,8 +9,8 @@ android {
         applicationId "com.itcraftsolution.picturepoint"
         minSdk 21
         targetSdk 31
-        versionCode 1
-        versionName "2.0"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
@@ -50,5 +50,6 @@ dependencies {
     // common io library support
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.karumi:dexter:6.2.3'
 
 }
