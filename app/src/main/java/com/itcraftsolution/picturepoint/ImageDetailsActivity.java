@@ -56,7 +56,6 @@ public class ImageDetailsActivity extends AppCompatActivity {
     private static final String CHANNEL_NAME = "IT_CRAFT_SOLUTION";
     private final NetworkChangeListner networkChangeListner = new NetworkChangeListner();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
