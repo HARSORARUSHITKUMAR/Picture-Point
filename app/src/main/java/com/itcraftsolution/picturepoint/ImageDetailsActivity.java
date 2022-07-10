@@ -1,5 +1,6 @@
 package com.itcraftsolution.picturepoint;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,9 +10,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
@@ -19,14 +20,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
@@ -34,7 +36,6 @@ import com.itcraftsolution.picturepoint.Utils.NetworkChangeListner;
 import com.itcraftsolution.picturepoint.databinding.ActivityImageDetailsBinding;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -80,9 +81,14 @@ public class ImageDetailsActivity extends AppCompatActivity {
         binding.btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) binding.igDetailZoom.getDrawable();
-                Bitmap bitmap = bitmapDrawable.getBitmap();
-                saveImgIntoGallery(bitmap);
+                if(!checkPermission())
+                {
+                    showPermission();
+                }else{
+                    BitmapDrawable bitmapDrawable = (BitmapDrawable) binding.igDetailZoom.getDrawable();
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    saveImgIntoGallery(bitmap);
+                }
 
             }
         });
@@ -203,17 +209,19 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
 
     }
+
     private void saveImgIntoGallery(Bitmap bitmap)
     {
         FileOutputStream fos;
         try {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                {
-                    String fileName;
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
-                    String currentDateTime = sdf.format(new Date());
-                    fileName = "IMG_" + currentDateTime + ".jpg";
+            String fileName;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+            String currentDateTime = sdf.format(new Date());
+            fileName = "IMG_" + currentDateTime + ".jpg";
+            File mediaFile = new File(PICTURE_POINT_DIR + File.separator + fileName);
 
+                if(Build.VERSION.SDK_INT == Build.VERSION_CODES.R || Build.VERSION.SDK_INT == Build.VERSION_CODES.Q)
+                {
                     ContentResolver contentResolver = getContentResolver();
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
@@ -223,10 +231,22 @@ public class ImageDetailsActivity extends AppCompatActivity {
                     fos = (FileOutputStream) contentResolver.openOutputStream(imageUri);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                     Objects.requireNonNull(fos);
-                    File mediaFile = new File(PICTURE_POINT_DIR + File.separator + fileName);
-                    showNotification(ImageDetailsActivity.this, mediaFile);
-                    finish();
+                }else{
+
+                    if (!PICTURE_POINT_DIR.exists()) {
+                        if (!PICTURE_POINT_DIR.mkdirs()) {
+                            Toast.makeText(ImageDetailsActivity.this, "Somthing went wrong !!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    fos = new FileOutputStream(mediaFile);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    intent.setData(Uri.fromFile(mediaFile));
+                    sendBroadcast(intent);
+
                 }
+            showNotification(ImageDetailsActivity.this, mediaFile);
+            finish();
         }catch (Exception e)
         {
             Toast.makeText(this, "Not Save to Gallery" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -322,6 +342,31 @@ public class ImageDetailsActivity extends AppCompatActivity {
         Uri uri = Uri.fromFile(fi);
         int dlt = resolver.delete(uri,null,null);
         Toast.makeText(this, ""+dlt, Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void showPermission()
+    {
+        // permission for 23 to 29 SDK
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(ContextCompat.checkSelfPermission(ImageDetailsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(ImageDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(ImageDetailsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+            }
+        }
+    }
+
+    private boolean checkPermission() {
+
+            int write = ContextCompat.checkSelfPermission(getApplicationContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int read = ContextCompat.checkSelfPermission(getApplicationContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            return write == PackageManager.PERMISSION_GRANTED &&
+                    read == PackageManager.PERMISSION_GRANTED;
 
     }
 

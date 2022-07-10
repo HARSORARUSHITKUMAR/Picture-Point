@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private SearchView searchView;
     private final NetworkChangeListner networkChangeListner = new NetworkChangeListner();
     private boolean isGranted = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,23 +63,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment temp = null;
-                    switch (item.getItemId())
-                    {
-                        case R.id.itMenuHome:
-                                temp = new HomeFragment();
-                                break;
+                switch (item.getItemId()) {
+                    case R.id.itMenuHome:
+                        temp = new HomeFragment();
+                        break;
 
-                        case R.id.itMenuCat:
-                            temp = new CatFragment();
-                            break;
+                    case R.id.itMenuCat:
+                        temp = new CatFragment();
+                        break;
 
 
-                        case R.id.itMenuDownload:
-                           temp = new SavedFragment();
-                           break;
-                    }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer, temp).commit();
-                 return true;
+                    case R.id.itMenuDownload:
+                        temp = new SavedFragment();
+                        break;
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer, temp).commit();
+                return true;
             }
         });
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.topmenu , menu);
+        getMenuInflater().inflate(R.menu.topmenu, menu);
         MenuItem menuItem = menu.findItem(R.id.itMenuSearch);
         searchView = (SearchView) menuItem.getActionView();
         searchView.setQueryHint("Type here To Search...");
@@ -104,9 +104,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 String imageUrl = "https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?cs=srgb&dl=pexels-sohail-nachiti-807598.jpg&fm=jpg";
-                Intent intent = new Intent(MainActivity.this , CatImageActivity.class);
-                intent.putExtra("CategoryName" , query);
-                intent.putExtra("CategoryImage" , imageUrl);
+                Intent intent = new Intent(MainActivity.this, CatImageActivity.class);
+                intent.putExtra("CategoryName", query);
+                intent.putExtra("CategoryImage", imageUrl);
                 startActivity(intent);
 
                 return true;
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 //                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},100);
 //            }
 //        }
-
+//     }
         // permission for R or above SDK
 //        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
 //        {
