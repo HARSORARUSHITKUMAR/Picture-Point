@@ -24,14 +24,17 @@ You'll find a wide variety of wallpapers on Picture Point, including 3D, Abstrac
 Photos/Media/Files: Needed to allow you to use custom photos as wallpaper.<br/>
 Storage: Needed to display the currently set wallpaper and to allow you to use custom photos as wallpaper.<br/>
 
-# Contact Me :
+## You can Connect With Me
 
-  Linkdin : https://www.linkedin.com/in/prathviksankaliya/ <br/>
-  Gmail : prathviksankaliya@gmail.com<br/><br/><br/>
+- [Linkedin](https://www.linkedin.com/in/prathviksankaliya/)
+<br/><br/>
 
 
 Picture Point: HD Wallpaper Live :
 https://play.google.com/store/apps/details?id=com.itcraftsolution.picturepoint
+
+# Tech Involved: 
+Android (Java), Material Ui, Media Api, Third Party Image Api(Pixel).
 
 # Application ScreenShot
 
