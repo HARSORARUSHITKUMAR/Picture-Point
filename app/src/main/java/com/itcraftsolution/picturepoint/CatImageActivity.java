@@ -48,13 +48,12 @@ public class CatImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityCatImageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN );
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         dialog = new ProgressDialog(CatImageActivity.this);
         dialog.setMessage("Loading...");
         dialog.setCancelable(false);
         dialog.show();
-
 
         loadData();
         //call SearchData
