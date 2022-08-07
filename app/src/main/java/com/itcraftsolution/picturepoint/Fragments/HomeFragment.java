@@ -87,7 +87,6 @@ public class HomeFragment extends Fragment {
                 int totalItem = manager.getItemCount();
                 int firstVisibleItemPos = manager.findFirstVisibleItemPosition();
 
-
                 if(!isLoading && !isLastPage)
                 {
                     if((visibleItem + firstVisibleItemPos >= totalItem) && firstVisibleItemPos >= 0 && totalItem >= pageSize)
@@ -142,7 +141,6 @@ public class HomeFragment extends Fragment {
                 }
                 isLoading = false;
 
-
                 // last page check
                 if(resentList.size() > 0)
                 {
@@ -160,8 +158,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<SearchModel> call, Throwable t) {
-
-                Toast.makeText(requireContext(), "Not able to Find Images !!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Not able to Find Images!!", Toast.LENGTH_SHORT).show();
             }
         });
     }

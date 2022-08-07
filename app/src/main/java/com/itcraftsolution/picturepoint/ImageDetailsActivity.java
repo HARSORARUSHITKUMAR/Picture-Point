@@ -98,15 +98,16 @@ public class ImageDetailsActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         binding.btnSetWallpaper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-
                     Bitmap bitmap = ((BitmapDrawable)binding.igDetailZoom.getDrawable()).getBitmap();
                     wallpaperManager.setBitmap(bitmap);
                     Toast.makeText(ImageDetailsActivity.this, "Set Wallpaper SuccessFully", Toast.LENGTH_SHORT).show();
                     finish();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast.makeText(ImageDetailsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -145,7 +146,6 @@ public class ImageDetailsActivity extends AppCompatActivity {
                     sendBroadcast(intent);
                 }
 //                    DeleteAndScanFile(getIntent().getStringExtra("FullImage"), fdelete);
-
             }
         });
     }
@@ -230,6 +230,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
                     fos = (FileOutputStream) contentResolver.openOutputStream(imageUri);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                     Objects.requireNonNull(fos);
+
                 }else{
 
                     if (!PICTURE_POINT_DIR.exists()) {
@@ -237,8 +238,10 @@ public class ImageDetailsActivity extends AppCompatActivity {
                             Toast.makeText(ImageDetailsActivity.this, "Somthing went wrong !!", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                     fos = new FileOutputStream(mediaFile);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
                     Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                     intent.setData(Uri.fromFile(mediaFile));
                     sendBroadcast(intent);
@@ -341,7 +344,6 @@ public class ImageDetailsActivity extends AppCompatActivity {
         Uri uri = Uri.fromFile(fi);
         int dlt = resolver.delete(uri,null,null);
         Toast.makeText(this, ""+dlt, Toast.LENGTH_SHORT).show();
-
     }
 
     private void showPermission()

@@ -1,31 +1,17 @@
 package com.itcraftsolution.picturepoint;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.os.Build.VERSION.SDK_INT;
-
-import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationBarView;
@@ -51,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+//        Tool Add
         setSupportActionBar(binding.tlMain);
 
 //        if(!isGranted)
@@ -58,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 //            binding.storagePermission.getRoot().setVisibility(View.VISIBLE);
 //            binding.clMainView.setVisibility(View.GONE);
 //        }
+
         getSupportFragmentManager().beginTransaction().replace(R.id.frMainContainer, new HomeFragment()).commit();
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -71,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.itMenuCat:
                         temp = new CatFragment();
                         break;
-
 
                     case R.id.itMenuDownload:
                         temp = new SavedFragment();
